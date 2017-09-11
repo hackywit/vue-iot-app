@@ -1,8 +1,8 @@
 <template>
   <div class="login">
     <h3>用户登录</h3>
-    <mu-text-field label="用户名" hintText="请输入用户名" v-model="userinfo.userName"></mu-text-field></br>
-    <mu-text-field label="密码" hintText="请输入密码" type="password" v-model="userinfo.password"></mu-text-field></br>
+    <mu-text-field label="用户名" hintText="请输入用户名" v-model="userinfo.userName"></mu-text-field><br/>
+    <mu-text-field label="密 码" hintText="请输入密码" type="password" v-model="userinfo.password"></mu-text-field><br/>
     <mu-select-field v-model='userinfo.userType' label='请选择用户类型' >
       <mu-menu-item value='producter' title='生产设备厂商'/>
       <mu-menu-item value='user' title='用户'/>

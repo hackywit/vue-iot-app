@@ -15,7 +15,6 @@ export function register(userinfo) {
 
 //用户登录
 export function login(userType, userName, password) {
-	console.log('api+login');
 	const data = {
 		userType,
 		userName,

@@ -60,26 +60,18 @@ const user = {
 		userRegister({ commit }, userinfo) {
 			return new Promise((resolve, reject) => {
 				register(userinfo).then(response => {
-					console.log(response);
 					const data = response.data;
-					console.log(data);
 					resolve();
 				}).catch(error => {
-					console.log(error);
 					reject(error);
 				})
 			})
 		},
 		//用户登录
 		userLogin({ commit }, userinfo) {
-			//const email = userinfo.email.trim();
-			//commit('SET_LOGIN', 1);
-			console.log(userinfo.userName + ' ' +  userinfo.password);
 			return new Promise((resolve, reject) => {
 				login(userinfo.userType, userinfo.userName, userinfo.password).then(response => {
-					console.log(response);
 					const data = response.data;
-					console.log(response.data);
 					Cookies.set('username', userinfo.userName, { expires: 365});
 					Cookies.set('userid', data.userId, { expires: 365 });
 					Cookies.set('password', userinfo.password, { expires: 365 });
@@ -88,10 +80,9 @@ const user = {
 									';password=' + Cookies.get('password') +
 									';usertype=' + Cookies.get('usertype') +
 									';userid=' + Cookies.get('userid');
-					console.log(token);
 					commit('SET_USERNAME', userinfo.userName);
+					commit('SET_USERTYPE', userinfo.userType);
 					commit('SET_TOKEN', token);
-
 					resolve();
 				}).catch(error => {
 					console.log(error);
