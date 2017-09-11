@@ -80,13 +80,11 @@
       }
     },
     created () {
-      if(this.$store.state.user.userType === 'producter'){
-          this.isShow = true;
+      if (this.$store.state.user.userinfo.userType === 'producter') {
+        this.isShow = true;
       }
       this.$store.dispatch('getDevices');
-      this.interval = setInterval(this.getALLDeviceStatus, 2000);
-      //this.getALLDeviceStatus();
-      //this.fetchData();
+//      this.interval = setInterval(this.getALLDeviceStatus, 2000);
     },
     mounted () {
       this.trigger = this.$refs.button.$el;
