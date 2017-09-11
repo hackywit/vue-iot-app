@@ -11,11 +11,11 @@ import 'muse-ui/dist/theme-light.css'
 
 import './mock/index.js';  // 该项目所有请求使用mockjs模拟
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 //注册VueRouter这个插件
 //Vue.use(VueRouter)
 //注册MuseUI
-Vue.use(MuseUI)
+Vue.use(MuseUI);
 
 /* eslint-disable no-new */
 new Vue({
@@ -24,4 +24,4 @@ new Vue({
   store,
   template: '<App/>',
   components: { App }
-})
+});

@@ -7,7 +7,6 @@ import modify from '@/components/modify'
 import main from '@/components/main'
 import monitor from '@/views/monitor/monitor'
 import devices from '@/views/device/devices'
-import warning from '@/components/warning'
 import friends from '@/views/friend/friends'
 
 
@@ -67,10 +66,6 @@ export default new Router({
               component: addMonitor
             }
           ]
-        },
-        {
-          path: '/warning',
-          component: warning
         },
         {
           path: '/devices',
