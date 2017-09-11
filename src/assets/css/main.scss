@@ -1,0 +1,32 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+#app {
+	.main {
+		padding-bottom: 50px;
+	}
+	.header {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+	}
+	.mu-list {
+		text-align: left;
+	}
+	.mu-tab-link-highlight {
+		background-color: #2196f3;
+	}
+
+	.new-friends {
+		.mu-raised-button {
+			margin-right: 50px;
+			height: 30px;
+		}
+		.friend-name {
+			color: #2196f3;
+		}
+	}
+}
