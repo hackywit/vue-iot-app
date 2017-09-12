@@ -5,7 +5,7 @@
       <router-link to='/devices' slot='left'>
         <mu-icon-button icon='keyboard_arrow_left' style='color: #fff'/>
       </router-link>
-      <!--<mu-icon-button icon="add" slot="right" ref='button' @click='openAddDialog'/>-->
+      <mu-icon-button icon="add" slot="right" ref='button' @click='openAddDialog'/>
     </mu-appbar>
     <div class="page-part">
       <mu-list>
