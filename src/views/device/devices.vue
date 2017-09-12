@@ -118,7 +118,7 @@
       //添加设备分组
       addGroupName() {
         this.addGroupDialog = false;
-        console.log(this.group_name);
+        console.log("---------------------"+this.group_name);
         if (this.group_name) {
           this.$store.dispatch('addDeviceGroup', this.group_name).then(() => {
             this.$store.dispatch('getDevices');

@@ -13,29 +13,28 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 // http request 拦截器
 axios.interceptors.request.use(
-    config => {
-        if (store.getters.token) {
-            config.headers['Cookie'] = store.getters.token;
-        }
-        config.data=JSON.stringify(config.data);
-        config.headers = {
-
-        };
-      //添加跨域请求时候，设置可以向服务器发送cookie
-      config.withCredentials=true;
-      return config;
-    },
-    error => {
-        return Promise.reject(error);
-    });
+  config => {
+    if (store.getters.token) {
+      config.headers['Cookie'] = store.getters.token;
+    }
+    // config.data=JSON.stringify(config.data);这边不要拦截data进行json编码，应该由axio完成
+    //不加这个显示不出请求
+    config.headers = {};
+    //添加跨域请求时候，设置可以向服务器发送cookie
+    config.withCredentials = true;
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  });
 
 // http response 拦截器
 axios.interceptors.response.use(
-    response => {
-        return response;
-    },
-    error => {
-        return Promise.reject(error.response.data)
-    });
+  response => {
+    return response;
+  },
+  error => {
+    return Promise.reject(error.response.data)
+  });
 
 export default axios;

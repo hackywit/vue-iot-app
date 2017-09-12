@@ -202,17 +202,12 @@ const devices = {
 			})
 		},
 		addDeviceGroup({ commit }, name) {
-			console.log(name);
 			return new Promise((resolve, reject) => {
-				const addData = '{ "deviceGroupName": "' + name + '"}';
-				console.log(addData);
+				const addData = `{ "deviceGroupName": "${name}"}`;
+				console.log("------------------------"+addData);
 				addDeviceGroup(addData).then(response => {
-					console.log(response);
-					//const data = response.data;
-					//console.log(data);
 					resolve();
 				}).catch(error => {
-					console.log(error);
 					reject(error);
 				})
 			})
