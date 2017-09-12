@@ -5,7 +5,6 @@
 			<router-link to='/friends' slot='left'>
 				<mu-icon-button icon='keyboard_arrow_left' style='color: #fff'/>
 			</router-link>
-			<mu-icon-button icon="add" slot="right" />
 		</mu-appbar>
 		<div class="page-part">
 			<mu-tabs :value="activeTab" @change="handleTabChange" class='tabs' >
@@ -16,7 +15,7 @@
 				<mu-list-item  v-for='sub in unreceivedList' :key='sub.friendName' :title='sub.friendName' slot='nested'>
         			<mu-icon slot="left" value="person"/>
         			<span slot='describe'>
-        				<span slot='left'>用户类型：{{sub.userType}} </span></br>
+        				<span slot='left'>用户类型：{{sub.userType}} </span><br/>
         				<span slot='left'>请求添加你为好友</span>
         			</span>
         			<mu-raised-button slot='right' label="接受" class="receive-btn" primary @click='receiveFriend(sub.friendName, sub.userType)'/>
@@ -58,7 +57,7 @@ export default {
 			this.activeTab = val;
 		},
 		receiveFriend(name, type) {
-			var data = '{ "userName": "' + name + '", "userType": "' +  type + ' "}'; 
+			var data = '{ "userName": "' + name + '", "userType": "' +  type + ' "}';
 			this.$store.dispatch('receiveFriend', data).then(() => {
 				console.log('添加好友成功');
 				this.$store.dispatch('getFriends');
@@ -73,7 +72,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang='scss' scoped> 
+<style lang='scss' scoped>
 /*.group {
 	background: #e1f5fe;
 }*/

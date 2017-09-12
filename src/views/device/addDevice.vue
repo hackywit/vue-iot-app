@@ -8,9 +8,6 @@
 		<div class="page-part">
 			<mu-text-field label="设备名称" hintText="请输入设备名称" v-model="deviceinfo.device_name"></mu-text-field><br/>
 			<mu-text-field label="设备序列号" hintText="请输入设备序列号" v-model="deviceinfo.serial"></mu-text-field><br/>
-			<!--<mu-select-field class='select' v-model="deviceinfo.productKey" label="请选择产品">-->
-				<!--<mu-menu-item v-for='item,index in productList' :key='index' :value='item.productKey' :title='item.productName' />-->
-			<!--</mu-select-field>-->
 		</div>
 		<mu-raised-button label="添加设备" class="demo-raised-button" primary @click='addDevice'/>
     </div>
