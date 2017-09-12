@@ -5,6 +5,9 @@ import { addDevice, getDevices, shareDevice, getDeviceData, shareDeviceGroup,
 
 const devices = {
 	state: {
+	  //本地页面间的传值变量
+    productListIndex: '',
+
 		deviceinfo: {
 			deviceId: '',		//设备ID
 			deviceName: '',		//设备序列号
@@ -63,15 +66,6 @@ const devices = {
 		product: {}
 	},
 	mutations: {
-		/*SET_SERIAL: (state, serial) => {
-			state.serial = serial;
-		},
-		SET_DEVICENAME: (state, device_name) => {
-			state.device_name = device_name;
-		},
-		SET_PASSWORD: (state, password) => {
-			state.password = password;
-		},*/
 		SET_DEVICEINFO: (state, info) => {
 			state.deviceinfo = info;
 		},

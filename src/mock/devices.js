@@ -83,15 +83,6 @@ export default {
 						}
 					]
 				}
-				/*
-				{
-					deviceGroup: '我的设备',
-					deviceInformation: List
-				},
-				{
-					deviceGroup: '好友分享设备',
-					deviceInformation: List1
-				}*/
 			]
 		}
 	},

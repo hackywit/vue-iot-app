@@ -9,7 +9,6 @@
                 :targetOrigin="targetOrigin" @close="handleClose">
       <mu-menu>
         <mu-menu-item title='添加设备组' @click='openAddGroup'/>
-        <mu-menu-item title='添加设备' to='/devices/adddevice' @click='handleClose'/>
       </mu-menu>
     </mu-popover>
     <mu-list vlaue='selected'>
