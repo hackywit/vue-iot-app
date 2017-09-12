@@ -18,7 +18,7 @@ axios.interceptors.request.use(
       config.headers['Cookie'] = store.getters.token;
     }
     // config.data=JSON.stringify(config.data);这边不要拦截data进行json编码，应该由axio完成
-    //不加这个显示不出请求
+    // 不加这个显示不出请求
     config.headers = {};
     //添加跨域请求时候，设置可以向服务器发送cookie
     config.withCredentials = true;

@@ -60,7 +60,7 @@
         //将界面输入框的数据分配到store中去处理，验证用户名密码是否正确
         this.$store.dispatch('userLogin', this.userinfo).then(() => {
           console.log('登录成功！');
-          this.$router.push({path: '/friends'});
+          this.$router.push({path: '/monitor'});
         }).catch(err => {
           console.log('登录失败！');
         });

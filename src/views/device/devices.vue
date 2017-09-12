@@ -13,7 +13,8 @@
       </mu-menu>
     </mu-popover>
     <mu-list vlaue='selected'>
-      <mu-list-item v-show="isShow" title="产品" class='list-item' @click='getProductList'>
+      <!--此处不选择v-show是应为这个指令不支持模板，会出错-->
+      <mu-list-item v-if="isShow" title="产品" class='list-item' @click='getProductList'>
         <mu-icon slot="left" value="playlist_add_check" :size='30'/>
       </mu-list-item>
       <mu-list-item v-for='item in deviceLists' :key='item.deviceGroup' :title='item.deviceGroup' :open='false'
@@ -80,10 +81,8 @@
       }
     },
     created () {
-      if (this.$store.state.user.userinfo.userType === 'producter') {
-        this.isShow = true;
-      }
       this.$store.dispatch('getDevices');
+      this.isShow = this.$store.state.user.userinfo.userType === 'producter';
 //      this.interval = setInterval(this.getALLDeviceStatus, 2000);
     },
     mounted () {
@@ -118,7 +117,7 @@
       //添加设备分组
       addGroupName() {
         this.addGroupDialog = false;
-        console.log("---------------------"+this.group_name);
+        console.log("---------------------" + this.group_name);
         if (this.group_name) {
           this.$store.dispatch('addDeviceGroup', this.group_name).then(() => {
             this.$store.dispatch('getDevices');

@@ -8,14 +8,14 @@
 		</mu-appbar>
 		<div class="page-part">
 			<br/>
-			<mu-text-field v-if='bText == 1' 
-				:label="label" 
+			<mu-text-field v-if='bText == 1'
+				:label="label"
 				:hintText="hintText"
 				:type='textType'
 				v-model="newMsg">
 			</mu-text-field>
-			<mu-select-field v-else-if='bText == 2' 
-				v-model='userinfo.userType' 
+			<mu-select-field v-else-if='bText == 2'
+				v-model='userinfo.userType'
 				label='请选择用户类型' >
 				<mu-menu-item value='producter' title='生产设备厂商'/>
 				<mu-menu-item value='user' title='用户'/>
@@ -43,7 +43,7 @@
 //import logo from '../../assets/logo.png'
 import { regions } from '@/utils/region'
 export default {
-	
+
 	data() {
 		return {
 			title: '修改信息',
@@ -75,7 +75,7 @@ export default {
 		provinceList() {
 			return regions;
 		}
-		
+
 	},
 	methods: {
 		userlogout() {
@@ -106,7 +106,7 @@ export default {
 			} else if(info === 'address') {
 				this.bText = 3;
 				this.title = '更改地址';
-				this.label = '新的地址'
+				this.label = '新的地址';
 				this.hintText = this.newMsg = '地址';
 			} else if(info === 'userType') {
 				this.bText = 2;
@@ -143,7 +143,7 @@ export default {
 		},
 		updatePassword() {
 			let data = '{"userName": "' + this.userinfo.userName +
-				'", "userType": "' + this.userinfo.userType + 
+				'", "userType": "' + this.userinfo.userType +
 				'", "password": "' + this.newMsg + '"}';
 			console.log(data);
 			this.$store.dispatch('updatePassword', data).then(() => {
@@ -158,7 +158,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang='scss' scoped> 
+<style lang='scss' scoped>
 .userinfo {
 	list-style: none;
 	li {
