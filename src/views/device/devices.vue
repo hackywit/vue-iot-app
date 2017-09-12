@@ -18,9 +18,7 @@
       </mu-list-item>
       <mu-list-item v-for='item in deviceLists' :key='item.deviceGroup' :title='item.deviceGroup' :open='false'
                     class='group' toggleNested>
-        <!--<mu-list-item title="我的设备" :open='false' toggleNested>-->
         <mu-icon-button slot='left' icon='share' @click='shareGroup(item.deviceGroup)'></mu-icon-button>
-        <!--<mu-list-item slot="nested" title="Starred"></mu-list-item>-->
         <mu-list-item v-for='sub in item.deviceInformation' :key='sub.deviceAlias' :title='sub.deviceAlias'
                       slot='nested' class='titleStyle'>
           <mu-icon v-if="sub.status == 'ONLINE'" slot="left" value="cloud_done" :size='35' color='green'/>
