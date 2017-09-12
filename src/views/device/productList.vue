@@ -154,14 +154,12 @@
         this.addGroup = true;
       },
       allocGroup() {
-        this.addGroup = false;
-        console.log(this.updateGroup);
         this.$store.dispatch('updateDeviceGroup', this.updateGroup).then(() => {
           console.log('分配到设备组成功');
           this.toastMsg = '分配到设备组成功！';
           this.showToast();
         }).catch(err => {
-          console.log('分配到设备组失败!');
+          console.log(this.updateGroup.deviceId +"----"+ this.updateGroup.changeGroupName);
         });
       },
       showToast () {

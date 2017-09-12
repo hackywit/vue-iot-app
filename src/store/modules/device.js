@@ -221,9 +221,9 @@ const devices = {
 			})
 		},
 		updateDeviceGroup({commit}, info) {
-			console.log(info);
 			return new Promise((resolve, reject) => {
-				updateDeviceGroup(info).then(response => {
+			  //这边是将一个对象输出为一个json格式的字符串JSON.stringify(info)
+				updateDeviceGroup(JSON.stringify(info)).then(response => {
 					console.log(response);
 					const data = response.data;
 					console.log(data);
