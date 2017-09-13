@@ -97,10 +97,7 @@ export function receiveFriend(data) {
 }
 
 //添加好友分组
-export function addFriendGroup(friendGroupName) {
-	const data = {
-		friendGroupName
-	};
+export function addFriendGroup(data) {
 	return axios({
 		url: '/v1/addfriendgroup',
 		method: 'post',
@@ -119,8 +116,16 @@ export function getFriendGroup() {
 //更新好友分组
 export function updateFriendGroup(data) {
 	return axios({
-		url: 'v1/movefriendgroup',
+		url: '/v1/movefriendgroup',
 		method: 'post',
 		data
 	})
+}
+
+export function delFriendGroup(data) {
+  return axios({
+    url: '/v1/delete_friendgroup',
+    method: 'post',
+    data
+  })
 }

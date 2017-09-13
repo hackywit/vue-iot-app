@@ -42,24 +42,6 @@ export default {
 	addFriend: () => {
 		return 'success';
 	},
-	/*getFriends: () => {
-		return {
-			friends: [
-			{
-				id: 1,
-				group: '我的好友',
-				group_id: 0,
-				sub: List1
-			},
-			{
-				id: 2,
-				group: '特殊好友',
-				group_id: 1,
-				sub: List2
-			}
-			]
-		}
-	}*/
 	getFriends: () => {
 		return {
 			friendList: [
@@ -106,5 +88,5 @@ export default {
 	},
 	updateFriendGroup: () => {
 		return 'success';
-	} 
+	}
 }

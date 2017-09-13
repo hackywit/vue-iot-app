@@ -1,10 +1,11 @@
-import { addFriend, getFriends, getUnreceivedList, getUnconfirmedList, receiveFriend, addFriendGroup, getFriendGroup, updateFriendGroup} from '@/api/main';
+import { addFriend, getFriends, getUnreceivedList, getUnconfirmedList, receiveFriend, addFriendGroup, getFriendGroup, updateFriendGroup,delFriendGroup} from '@/api/main';
 
 
 const friends = {
 	state: {
 		friendList: [
 			{
+				groupId: '',
 				groupName: '',
 				friends: [
 					{
@@ -53,21 +54,18 @@ const friends = {
 	},
 
 	actions: {
-		addFriendGroup({ commit }, groupname) {
-			console.log(groupname);
+		addFriendGroup({ commit }, data) {
+		  console.log("++++++++++" + data);
 			return new Promise((resolve, reject) => {
-				addFriendGroup(groupname).then(response => {
-					console.log(response);
+        addFriendGroup(data).then(response => {
 					resolve();
 				}).catch(error => {
-					console.log(error);
 					reject(error);
 				})
 			})
 		},
 		//添加好友
 		addFriend({ commit }, friendInfo) {
-			console.log('addFriend');
 			return new Promise((resolve, reject) => {
 				addFriend(friendInfo).then(response => {
 					console.log(response);
@@ -78,23 +76,6 @@ const friends = {
 				})
 			})
 		},
-		//获取用户好友列表
-		/*getFriends({ commit }) {
-			console.log('getFriends');
-			return new Promise((resolve, reject) => {
-				getFriends().then(response => {
-					console.log(response);
-					const data = response.data.friends;
-					//const data = Object.keys(response.data).map(key=> response.data[key]);
-					console.log(data);
-					commit('SET_GROUPS', data);
-					resolve();
-				}).catch(error => {
-					console.log(error);
-					reject(error);
-				})
-			})
-		}*/
 		getFriends({ commit }) {
 			console.log('getFriends');
 			return new Promise((resolve, reject) => {
@@ -154,23 +135,10 @@ const friends = {
 			return new Promise((resolve, reject) => {
 				getFriendGroup().then(response => {
 					console.log(response);
-					const data = response.data.friendGroup
+					const data = response.data.friendGroup;
 					//const data = Object.keys(response.data).map(key=> response.data[key]);
 					console.log(data);
 					commit('SET_FRIENDGROUP', data);
-					resolve();
-				}).catch(error => {
-					console.log(error);
-					reject(error);
-				})
-			})
-		},
-		//添加好友列表
-		addFriendGroup({ commit }, groupname) {
-			console.log('addFriendGroup');
-			return new Promise((resolve, reject) => {
-				addFriendGroup(groupname).then(response => {
-					console.log(response);
 					resolve();
 				}).catch(error => {
 					console.log(error);
@@ -190,7 +158,17 @@ const friends = {
 					reject(error);
 				})
 			})
-		}
+		},
+    //删除好友分组
+    delFriendGroup({commit}, data){
+      return new Promise((resolve, reject) => {
+        delFriendGroup(data).then(response => {
+          resolve();
+        }).catch(error => {
+          reject(error);
+        })
+      })
+    }
 	}
 };
 
