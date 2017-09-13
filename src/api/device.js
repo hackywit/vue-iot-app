@@ -112,3 +112,10 @@ export function deleteDevice(data) {
     data
   })
 }
+export function cancelDeviceShare(data) {
+  return axios({
+    url: '/v1/cancel_device_share',
+    method: 'post',
+    data
+  })
+}

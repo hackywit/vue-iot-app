@@ -16,23 +16,27 @@
       <mu-list-item v-if="isShow" title="产品" class='list-item' @click='getProductList'>
         <mu-icon slot="left" value="playlist_add_check" :size='30'/>
       </mu-list-item>
-      <mu-list-item v-for='item in deviceLists' :key='item.deviceGroup' :title='item.deviceGroup' :open='false'
+      <mu-list-item v-for='(item,deviceGroupIndex) in deviceLists' :key='item.deviceGroup' :title='item.deviceGroup' :open='false'
                     class='group' toggleNested>
         <mu-icon-button slot='left' icon='share' @click='shareGroup(item.deviceGroup)'></mu-icon-button>
-        <mu-list-item v-for='sub in item.deviceInformation' :key='sub.deviceAlias' :title='sub.deviceAlias'
+        <mu-list-item v-for='(sub,deviceIndex) in item.deviceInformation' :key='sub.deviceAlias' :title='sub.deviceAlias'
                       slot='nested' class='titleStyle'>
           <mu-icon v-if="sub.status == 'ONLINE'" slot="left" value="cloud_done" :size='35' color='green'/>
           <mu-icon v-else-if="sub.status == 'OFFLINE'" slot="left" value="cloud_off" :size='35' color='red'/>
           <mu-icon v-else slot="left" value="cloud_circle" :size='40'/>
-          <!--<mu-icon slot='right' value='menu'></mu-icon>-->
           <span slot='describe'>
         				<span slot='left'>设备序列号：{{sub.deviceName}}</span><br/>
+        				<span slot='right'>设备Id：{{sub.deviceId}}</span>
+        				<span slot='right'>设备名：{{sub.deviceAlias}}</span>
+        				<span slot='right'>设备密码：{{sub.deviceSecret}}</span>
+        				<span slot='right'>产品key：{{sub.productKey}}</span>
+        				<span slot='right'>产品名称：{{sub.productName}}</span>
         				<span slot='right'>状态：{{sub.status}}</span>
         			</span>
           <mu-icon-menu slot="right" icon="menu" tooltip="操作">
             <mu-menu-item title="查看" to='/devices/infor' @click='getDeviceInfo(sub, item.deviceGroup)'/>
             <mu-menu-item title="分享" to='/devices/share' @click='getDeviceInfo(sub, item.deviceGroup)'/>
-            <mu-menu-item title="删除" @click='openDelDialog(sub)'/>
+            <mu-menu-item title="取消分享" @click='openDelDialog(deviceGroupIndex,deviceIndex)'/>
           </mu-icon-menu>
         </mu-list-item>
       </mu-list-item>
@@ -43,10 +47,14 @@
       <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
       <mu-flat-button slot='actions' @click='addGroupName' primary label='添加'/>
     </mu-dialog>
-    <mu-dialog :open='deleteDialog' title='删除设备' @close='closeDialog'>
-      <p>确定删除设备: {{deviceInfo.deviceAlias}} ?</p>
+    <mu-dialog :open='deleteDialog' title='取消设备分享' @close='closeDialog'>
+      <p>确定撤销设备 {{device.deviceAlias}} 的分享?</p>
+      <!--让用户选择撤销的分享的用户-->
+      <mu-select-field v-model="value" :labelFocusClass="['label-foucs']" label="选择你需要取消分享的用户">
+        <mu-menu-item v-for="(beSharedUser,userIndex) in device.beSharedUser" :key="userIndex" :value="beSharedUser.beSharedName" :title="beSharedUser.beSharedName" @click="setUserIndex(userIndex)"/>
+      </mu-select-field>
       <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
-      <mu-flat-button slot='actions' @click='deleteDevice' primary label='删除'/>
+      <mu-flat-button slot='actions' @click='cancelDeviceShare' primary label='确定'/>
     </mu-dialog>
     <transition name='router-show'>
       <router-view></router-view>
@@ -59,8 +67,22 @@
   export default {
     data () {
       return {
+        //界面DOM展示有关
         isShow: false,
         openDialog: false,
+        userIndex:'',
+        value: 0,
+        //界面数据展示有关
+        device:{
+          deviceId:'',
+          beSharedUser: [
+            {
+              beSharedId: '',
+              beSharedName: ''
+            }
+          ]
+        },
+
         trigger: null,
         anchorOrigin: {
           vertical: 'bottom',
@@ -78,10 +100,7 @@
       }
     },
     created () {
-      console.log("----------------" + this.$store.state.user.userinfo.userType);
-      console.log("----------------" + this.$store.state.user.userinfo.userName);
       this.isShow = this.$store.state.user.userinfo.userType === 'producter';
-      console.log("----------------" + this.isShow);
       this.$store.dispatch('getDevices');
 //      this.interval = setInterval(this.getALLDeviceStatus, 2000);
     },
@@ -140,13 +159,25 @@
 
       },
       //打开删除设备对话框
-      openDelDialog(value) {
-        console.log(value);
-        this.$store.state.deviceInfo = value;
+      openDelDialog(deviceGroupIndex,deviceIndex) {
+        //获取到被分享的用户信息
+        this.device.deviceId = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceInformation[deviceIndex].deviceId;
+        this.device.beSharedUser = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceInformation[deviceIndex].beSharedUser;
         this.deleteDialog = true;
       },
-      deleteDevice() {
+      setUserIndex(userIndex){
+          this.userIndex = userIndex;
+      },
+      cancelDeviceShare() {
         this.deleteDialog = false;
+        //将得到的数据分发给store中的取消分享的事件
+        let postObj = {};
+        postObj.deviceId = this.device.deviceId;
+        postObj.besharedId = this.device.beSharedUser[this.userIndex].beSharedId;
+        const data = JSON.stringify(postObj);
+        this.$store.dispatch('cancelDeviceShare', data);
+        //删除设备后及时刷新一次
+        this.$store.dispatch('getDevices');
       },
       getProductList() {
         this.$store.dispatch('getProducts').then(() => {

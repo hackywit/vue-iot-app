@@ -2,7 +2,7 @@ import {
   addDevice, getDevices, shareDevice, getDeviceData, shareDeviceGroup,
   addDeviceGroup, getDeviceGroup, updateDeviceGroup,
   getProducts, addProduct, updateProduct, deleteProduct,
-  getDeviceStatus, getALLDeviceStatus, deleteDevice
+  getDeviceStatus, getALLDeviceStatus, deleteDevice,cancelDeviceShare
 } from '@/api/device';
 
 const devices = {
@@ -33,8 +33,12 @@ const devices = {
             deviceName: '',		//设备序列号
             deviceAlias: '',	//设备别名（设备名）
             deviceSecret: '',	//设备绑定密码
-            providerName: '',	//设备商名称
-            userName: '',		//使用商名称
+            beSharedUser: [
+              {
+                beSharedId: '',
+                beSharedName: ''
+              }
+            ],
             productKey: '',		//产品key
             status: ''
           }
@@ -120,6 +124,17 @@ const devices = {
   },
 
   actions: {
+    //取消设备分享
+    cancelDeviceShare({commit}, data){
+      return new Promise((resolve, reject) => {
+        cancelDeviceShare(data).then(response => {
+          resolve();
+        }).catch(error => {
+          reject(error);
+        })
+      })
+    },
+
     //删除设备
     deleteDevice({commit}, deviceId){
       return new Promise((resolve, reject) => {
@@ -155,9 +170,7 @@ const devices = {
     getDevices({commit}) {
       return new Promise((resolve, reject) => {
         getDevices().then(response => {
-          console.log(response);
           const data = response.data.deviceLists;
-          console.log(data);
           commit('SET_DEVICELIST', data);
           resolve();
         }).catch(error => {
