@@ -119,3 +119,10 @@ export function cancelDeviceShare(data) {
     data
   })
 }
+export function delDeviceGroup(data) {
+  return axios({
+    url: '/v1/delete_devicegroup',
+    method: 'post',
+    data
+  })
+}

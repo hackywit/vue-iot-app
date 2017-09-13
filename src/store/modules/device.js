@@ -2,7 +2,7 @@ import {
   addDevice, getDevices, shareDevice, getDeviceData, shareDeviceGroup,
   addDeviceGroup, getDeviceGroup, updateDeviceGroup,
   getProducts, addProduct, updateProduct, deleteProduct,
-  getDeviceStatus, getALLDeviceStatus, deleteDevice,cancelDeviceShare
+  getDeviceStatus, getALLDeviceStatus, deleteDevice,cancelDeviceShare, delDeviceGroup
 } from '@/api/device';
 
 const devices = {
@@ -26,7 +26,8 @@ const devices = {
     deviceData: {},
     deviceLists: [
       {
-        deviceGroup: '',
+        deviceGroupName: '',
+        deviceGroupId: '',
         deviceInformation: [
           {
             deviceId: '',		//设备ID
@@ -124,6 +125,17 @@ const devices = {
   },
 
   actions: {
+    //删除设备组
+    delDeviceGroup({commit}, data){
+      return new Promise((resolve, reject) => {
+        delDeviceGroup(data).then(response => {
+          resolve();
+        }).catch(error => {
+          reject(error);
+        })
+      })
+    },
+
     //取消设备分享
     cancelDeviceShare({commit}, data){
       return new Promise((resolve, reject) => {

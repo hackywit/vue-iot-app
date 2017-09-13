@@ -1,26 +1,14 @@
 <template>
 	<div class="friends">
-		<!--header-->
 		<mu-appbar title="好友" class='header'>
         	<mu-icon-button icon="add" slot="right" ref='button' @click='toggle'/>
         </mu-appbar>
-        <!-- popmenu -->
         <mu-popover :open='openMenu' :autoPosition='false' :trigger='trigger' :anchorOrigin="anchorOrigin" :targetOrigin="targetOrigin" @close="handleClose">
         	<mu-menu>
         		<mu-menu-item title='添加好友列表' @click='openAddGroup' leftIcon="group_add"/>
         		<mu-menu-item title='添加好友' @click='openAddFriend' leftIcon="person_add"/>
         	</mu-menu>
         </mu-popover>
-        <!--<mu-list>
-        	<mu-list-item title="我的好友" titleClass='title' toggleNested>
-        		<mu-list-item slot="nested" title="Starred">
-        		</mu-list-item>
-        	</mu-list-item>
-        	<mu-list-item title="默认分组1" toggleNested>
-        		<mu-list-item slot="nested" title="Starred">
-        		</mu-list-item>
-        	</mu-list-item>
-        </mu-list>-->
         <mu-list>
         	<mu-list-item title="新的好友" to='/friends/newfriends' class='list-item' @click='getNewFriends'>
         		<mu-icon slot="left" value="person_add"/>
@@ -31,19 +19,13 @@
         			<mu-icon slot="left" value="person"/>
         		</mu-list-item>
         	</mu-list-item>
-        	<!--<mu-list-item title="我的好友" toggleNested>
-        		<mu-icon slot="left" value="people"/>
-        		<mu-list-item  v-for='sub in friendList' :key='sub.friendName' :title='sub.friendName' slot='nested'>
-        			<mu-icon slot="left" value="person"/>
-        		</mu-list-item>
-        	</mu-list-item>-->
         </mu-list>
         <!-- add friend group dialog -->
         <mu-dialog :open='showAddFriend' title='添加好友' @close='closeDialog'>
         	<mu-text-field hintText='请输入好友用户名' v-model='friendInfo.friendName'></mu-text-field>
         	<mu-select-field v-model='friendInfo.groupName' label='请选择好友列表'>
         		<mu-menu-item v-for='item in friendList' :key='item.groupName' :title='item.groupName' :value='item.groupName'></mu-menu-item>
-        	</mu-select-field></br>
+        	</mu-select-field><br/>
         	<mu-select-field v-model='friendInfo.userType' label='请选择好友用户类型' >
         		<mu-menu-item value='producter' title='生产设备厂商'/>
         		<mu-menu-item value='user' title='用户'/>
@@ -99,17 +81,6 @@ export default {
 		this.trigger = this.$refs.button.$el;
 	},
 	computed: {
-		/*fetchData () {
-			this.$store.dispatch('getFriends').then(() => {
-				console.log('getFriends');
-				this.groups = this.$store.state.friends.groups;
-			}).catch(err => {
-				console.log('error');
-			});
-		}*/
-		/*groups() {
-			return this.$store.state.friends.groups;
-		}*/
 		friendList() {
 			return this.$store.state.friends.friendList;
 		},
@@ -139,12 +110,6 @@ export default {
 		addGroupName () {
 			this.showAddGroup = false;
 			console.log(this.group_name);
-			/*if(this.group_name) {
-				let groups = this.$store.state.friends.groups;
-				for(let i=0, len = groups.length; i < len; i++) {
-					console.log(groups[i].group);
-				}
-			}*/
 			if(this.group_name)
 			{
 				console.log(this.group_name);
