@@ -18,8 +18,11 @@
           </mu-icon-menu>
           <mu-list-item v-for='(sub,index) in item.deviceList' :key='sub.deviceId' :title='sub.deviceAlias'
                         :describeText="sub.deviceName" slot='nested'>
-            <mu-float-button v-if='!sub.isSelled' slot='right' icon="add" mini class="add-group"
-                             @click='openAllocGroup(sub.deviceId,index)'/>
+            <mu-icon-menu slot="right" icon="more_vert" tooltip="操作">
+              <!--添加移动分组列表选项-->
+              <mu-menu-item v-if='!sub.isSelled' title="移动分组" @click='openAllocGroup(sub.deviceId,index)'/>
+              <mu-menu-item title="删除机器" @click='deleteDevice(sub.deviceId)'/>
+            </mu-icon-menu>
           </mu-list-item>
         </mu-list-item>
       </mu-list>
@@ -42,8 +45,7 @@
     </mu-dialog>
     <mu-dialog :open='addGroup' title='分配至设备组' @close='closeDialog'>
       <mu-select-field class='select' v-model="updateGroup.changeGroupName" label="请选择设备组">
-        <mu-menu-item v-for='item,index in deviceGroupList' :key='index' :value='item.groupName'
-                      :title='item.groupName'/>
+        <mu-menu-item v-for='(item,index) in deviceGroupList' :key='index' :value='item.groupName' :title='item.groupName'/>
       </mu-select-field>
       <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
       <mu-flat-button slot='actions' @click='allocGroup' primary label='确定'/>
@@ -149,6 +151,10 @@
         }).catch(err => {
           console.log('删除产品失败!');
         });
+      },
+      deleteDevice(deviceId){
+        // 打开删除的提示框，确定之后分配到store中进行删除
+
       },
       openAllocGroup(deviceId, index) {
         //由于这个是求post过去的数据，所以不涉及到界面的计算属性，放在methods即可

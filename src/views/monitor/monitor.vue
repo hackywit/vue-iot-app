@@ -75,7 +75,7 @@ export default {
 	created() {
 		//this.getMonitorList();
 		this.$store.state.selected = 'monitor';
-		this.interval = setInterval(this.getAllData, 1000);
+//		this.interval = setInterval(this.getAllData, 1000);
 		//this.getAllData();
 	},
 	mounted () {

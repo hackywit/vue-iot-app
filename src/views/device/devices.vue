@@ -78,8 +78,9 @@
       }
     },
     created () {
-      this.$store.dispatch('getDevices');
+      //store中的状态改变必须发生在事件分发之前，不然不起作用
       this.isShow = this.$store.state.user.userinfo.userType === 'producter';
+      this.$store.dispatch('getDevices');
 //      this.interval = setInterval(this.getALLDeviceStatus, 2000);
     },
     mounted () {
