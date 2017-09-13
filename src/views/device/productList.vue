@@ -10,18 +10,19 @@
     <div class="page-part">
       <mu-list>
         <mu-list-item v-for='(item,index) in productList' :key='item.productKey' :title='item.productName'
-                      :describeText="item.productDesc" :open='false' class='group' toggleNested>
+                      :describeText="item.productDesc" :open='false' class='group' toggleNested >
           <mu-icon-menu slot="leftAvatar" icon="settings_system_daydream" tooltip="操作">
             <mu-menu-item title="修改" @click='openEditDialog(item)'/>
             <mu-menu-item title="删除" @click='openDelDialog(item)'/>
             <mu-menu-item title='添加设备' @click='setindex(index)'/>
           </mu-icon-menu>
-          <mu-list-item v-for='(sub,index) in item.deviceList' :key='sub.deviceId' :title='sub.deviceAlias'
+          <mu-list-item v-for='(sub,deviceIndex) in item.deviceList' :key='sub.deviceId' :title='sub.deviceAlias'
                         :describeText="sub.deviceName" slot='nested'>
             <mu-icon-menu slot="right" icon="more_vert" tooltip="操作">
               <!--添加移动分组列表选项-->
               <mu-menu-item v-if='!sub.isSelled' title="移动分组" @click='openAllocGroup(sub.deviceId,index)'/>
-              <mu-menu-item title="删除机器" @click='deleteDevice(sub.deviceId)'/>
+              <!--这边需要注意，只能传递一个参数-->
+              <mu-menu-item title="删除机器" @click='openDelDeviceDialog(index,deviceIndex)'/>
             </mu-icon-menu>
           </mu-list-item>
         </mu-list-item>
@@ -45,10 +46,16 @@
     </mu-dialog>
     <mu-dialog :open='addGroup' title='分配至设备组' @close='closeDialog'>
       <mu-select-field class='select' v-model="updateGroup.changeGroupName" label="请选择设备组">
-        <mu-menu-item v-for='(item,index) in deviceGroupList' :key='index' :value='item.groupName' :title='item.groupName'/>
+        <mu-menu-item v-for='(item,index) in deviceGroupList' :key='index' :value='item.groupName'
+                      :title='item.groupName'/>
       </mu-select-field>
       <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
       <mu-flat-button slot='actions' @click='allocGroup' primary label='确定'/>
+    </mu-dialog>
+    <mu-dialog :open='delDevice' title='删除设备' @close='closeDialog'>
+      <p>确定删除设备: {{device.deviceAlias}} ?</p>
+      <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
+      <mu-flat-button slot='actions' @click='deleteDevice' primary label='删除'/>
     </mu-dialog>
     <mu-toast v-if="toast" :message="toastMsg" @close="hideToast"/>
     <transition name='router-show'>
@@ -61,6 +68,11 @@
   export default {
     data () {
       return {
+        //模板临时变量
+        device:{
+            deviceId:'',
+            deviceAlias: ''
+        },
         product: {
           productKey: '',
           productName: '',
@@ -75,6 +87,7 @@
         editDialog: false,
         delProduct: false,
         addGroup: false,
+        delDevice: false,
         toast: false,
         toastTimer: 0,
         toastMsg: ''
@@ -115,11 +128,18 @@
         this.product = value;
         this.delProduct = true;
       },
+      openDelDeviceDialog(index,deviceIndex,){
+        // 先找到当前index下的设备名称，保存到模板的数据项中
+        this.device.deviceAlias = this.$store.state.devices.productList[index].deviceList[deviceIndex].deviceAlias;
+        this.device.deviceId = this.$store.state.devices.productList[index].deviceList[deviceIndex].deviceId;
+        this.delDevice = true;
+      },
       closeDialog() {
         this.addDialog = false;
         this.editDialog = false;
         this.delProduct = false;
         this.addGroup = false;
+        this.delDevice = false;
       },
       addProduct() {
         this.$store.dispatch('addProduct', this.product.productName).then(() => {
@@ -152,9 +172,16 @@
           console.log('删除产品失败!');
         });
       },
-      deleteDevice(deviceId){
-        // 打开删除的提示框，确定之后分配到store中进行删除
-
+      deleteDevice(){
+        this.delDevice = false;
+        this.$store.dispatch('deleteDevice', this.device.deviceId).then(() => {
+          this.$store.dispatch('getProducts');
+          console.log('删除设备成功');
+          this.toastMsg = '删除设备成功！';
+          this.showToast();
+        }).catch(err => {
+          console.log('删除设备失败!');
+        });
       },
       openAllocGroup(deviceId, index) {
         //由于这个是求post过去的数据，所以不涉及到界面的计算属性，放在methods即可

@@ -105,3 +105,10 @@ export function getDeviceStatus(data) {
 		data
 	})
 }
+export function deleteDevice(data) {
+  return axios({
+    url: '/v1/delete_device',
+    method: 'post',
+    data
+  })
+}

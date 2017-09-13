@@ -2,14 +2,14 @@ import {
   addDevice, getDevices, shareDevice, getDeviceData, shareDeviceGroup,
   addDeviceGroup, getDeviceGroup, updateDeviceGroup,
   getProducts, addProduct, updateProduct, deleteProduct,
-  getDeviceStatus, getALLDeviceStatus
+  getDeviceStatus, getALLDeviceStatus, deleteDevice
 } from '@/api/device';
 
 const devices = {
   state: {
     //本地页面间的传值变量
     productListIndex: '',
-    productDeviceListIndex:'',
+    productDeviceListIndex: '',
 
     deviceinfo: {
       deviceId: '',		//设备ID
@@ -120,6 +120,18 @@ const devices = {
   },
 
   actions: {
+    //删除设备
+    deleteDevice({commit}, deviceId){
+      return new Promise((resolve, reject) => {
+        const data = `{"deviceId":"${deviceId}"}`;
+        deleteDevice(data).then(response => {
+          resolve();
+        }).catch(error => {
+          reject(error);
+        })
+      })
+    },
+
     //注册设备
     addDevice({commit}, deviceinfo) {
       console.log(deviceinfo);
@@ -132,8 +144,6 @@ const devices = {
           console.log(response);
           const data = response.data;
           console.log(data);
-          //commit('SET_SERIAL', deviceinfo.serial);
-          //commit('SET_DEVICENAME', deviceinfo.device_name);
           resolve();
         }).catch(error => {
           console.log(error);
