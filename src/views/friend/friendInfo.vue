@@ -12,7 +12,7 @@
 				<p>
 					<span>好友用户名：</span>
 					<span>{{ friendInfo.friendName }}</span>
-					
+
 				</p>
 			</div>
 			<div>
@@ -28,11 +28,11 @@
 			</div>
 			<div>
 				<p><span>所在分组：</span> {{ friendInfo.groupName }}</p>
-			</div></br>
+			</div><br/>
 			<div>
 				<mu-select-field v-model='updateFriend.bemoveGroupName' label='移动好友至' class='move-select'>
         			<mu-menu-item v-for='item in groupList' :key='item.groupId' :title='item.groupName' :value='item.groupName'></mu-menu-item>
-        		</mu-select-field></br>
+        		</mu-select-field><br/>
 			</div>
 		</div>
     </div>
@@ -71,29 +71,29 @@ export default {
 		filterGroup(groups) {
 			return groups.groupName !== this.friendInfo.groupName;
 		},
-		update() {
-			this.updateFriend.friendName = this.friendInfo.friendName;
-			this.updateFriend.friendType = this.friendInfo.userType;
-			console.log(this.updateFriend);
-			if(!this.updateFriend.bemoveGroupName) {
-				console.log('好友列表不能为空');
-				return;
-			}
-			this.$store.dispatch('updateFriendGroup', this.updateFriend).then(() => {
-				console.log('更新列表成功！');
-				this.$store.dispatch('getFriends');
-				this.$router.push({ path: '/friends' });
-			}).catch(err => {
-				console.log('更新好友列表失败!');
-			});
-		}
+//		update() {
+//			this.updateFriend.friendName = this.friendInfo.friendName;
+//			this.updateFriend.friendType = this.friendInfo.userType;
+//			console.log(this.updateFriend);
+//			if(!this.updateFriend.bemoveGroupName) {
+//				console.log('好友列表不能为空');
+//				return;
+//			}
+//			this.$store.dispatch('updateFriendGroup', this.updateFriend).then(() => {
+//				console.log('更新列表成功！');
+//				this.$store.dispatch('getFriends');
+//				this.$router.push({ path: '/friends' });
+//			}).catch(err => {
+//				console.log('更新好友列表失败!');
+//			});
+//		}
 	}
 }
 
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang='scss' scoped> 
+<style lang='scss' scoped>
 /*.group {
 	background: #e1f5fe;
 }*/
