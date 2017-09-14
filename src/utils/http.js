@@ -6,8 +6,8 @@ import axios from 'axios'
 
 // axios 配置
 axios.defaults.timeout = 5000;
-// axios.defaults.baseURL = 'http://localhost:80';
-axios.defaults.baseURL = process.env.BASE_API;
+axios.defaults.baseURL = "http://47.93.224.34:80";
+// axios.defaults.baseURL = process.env.BASE_API;
 axios.defaults.withCredentials = true;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
