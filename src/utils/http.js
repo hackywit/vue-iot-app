@@ -14,7 +14,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 // http request 拦截器
 axios.interceptors.request.use(
   config => {
-    // 不加这个显示不出请求，post需要用到
+    // 不加这个显示不出请求，post需要用到，不能少，不然报错
     config.headers = {};
     return config;
   },
