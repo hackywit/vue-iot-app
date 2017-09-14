@@ -16,13 +16,14 @@
       </mu-list-item>
       <mu-list-item v-for='(item,friendGroupIndex) in friendList' :key='item.groupName' :title='item.groupName'
                     :open='false' class='group' toggleNested>
-        <mu-icon-menu slot="left" icon="people" tooltip="操作">
+        <mu-icon-menu slot="left" icon="people">
           <mu-menu-item title="删除好友分组" @click="openDeleteFrinedGroupDialog(friendGroupIndex)"/>
         </mu-icon-menu>
         <mu-list-item v-for='(sub,friendIndex) in item.friends' :key='sub.friendName' :title='sub.friendName'
                       slot='nested'>
-          <mu-icon-menu slot="left" icon="people" tooltip="操作">
+          <mu-icon-menu slot="left" icon="people">
             <mu-menu-item title="移动好友" @click="openMoveFrinedDialog(friendGroupIndex,friendIndex)"/>
+            <mu-menu-item title="删除好友" @click="openDeleteFrinedDialog(friendGroupIndex,friendIndex)"/>
           </mu-icon-menu>
         </mu-list-item>
       </mu-list-item>
@@ -47,6 +48,11 @@
       是否删除好友组：{{ friendGroup.friendGroupName }}
       <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
       <mu-flat-button slot='actions' @click='delFriendGroup' primary label='删除'/>
+    </mu-dialog>
+    <mu-dialog :open='delFriendDialog' title='删除好友' @close='closeDialog'>
+      是否删除好友：{{ friendInfo.friendName }}
+      <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
+      <mu-flat-button slot='actions' @click='delFriend' primary label='删除'/>
     </mu-dialog>
     <mu-dialog :open='moveFriendDialog' title='移动好友分组' @close='closeDialog'>
       是否移动好友{{ friendInfo.friendName }}到 ：<br/>
@@ -97,7 +103,8 @@
         showAddGroup: false,
         showAddFriend: false,
         delFriendGroupDialog: false,
-        moveFriendDialog: false
+        moveFriendDialog: false,
+        delFriendDialog: false
       }
     },
     created () {
@@ -148,6 +155,7 @@
         this.showAddFriend = false;
         this.delFriendGroupDialog = false;
         this.moveFriendDialog = false;
+        this.delFriendDialog = false;
       },
       //添加好友
       openAddFriend() {
@@ -174,6 +182,12 @@
         this.friendInfo.userType = this.$store.state.friendMap.friendList[friendGroupIndex].friends[friendIndex].userType;
         this.moveFriendDialog = true;
       },
+      openDeleteFrinedDialog(friendGroupIndex,friendIndex){
+        this.friendInfo.friendName = this.$store.state.friendMap.friendList[friendGroupIndex].friends[friendIndex].friendName;
+        this.friendInfo.userType = this.$store.state.friendMap.friendList[friendGroupIndex].friends[friendIndex].userType;
+        this.delFriendDialog = true;
+      },
+      //移动好友分组
       moveFriend(){
         this.moveFriendDialog = false;
         let postObj = {};
@@ -190,6 +204,16 @@
         this.friendGroup.friendGroupId = this.$store.state.friendMap.friendList[friendGroupIndex].groupId;
         this.friendGroup.friendGroupName = this.$store.state.friendMap.friendList[friendGroupIndex].groupName;
         this.delFriendGroupDialog = true;
+      },
+      //删除好友
+      delFriend(){
+        this.delFriendDialog = false;
+        let postObj = {};
+        postObj.friendName = this.friendInfo.friendName;
+        postObj.friendType = this.friendInfo.userType;
+        this.$store.dispatch('deleteFriend',JSON.stringify(postObj)).then(()=>{
+          this.$store.dispatch('getFriends');
+        });
       },
       //删除好友分组
       delFriendGroup(){

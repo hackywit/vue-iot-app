@@ -7,7 +7,8 @@ import {
   addFriendGroup,
   getFriendGroup,
   updateFriendGroup,
-  delFriendGroup
+  delFriendGroup,
+  deleteFriend
 } from '@/api/main';
 
 
@@ -48,7 +49,6 @@ const friendMap = {
   mutations: {
     SET_FRIENDLIST: (state, list) => {
       state.friendList = list;
-      console.log("------------" + state.friendList[0].groupName);
     },
     SET_UNRECEIVED: (state, list) => {
       state.unreceivedList = list;
@@ -164,6 +164,16 @@ const friendMap = {
     delFriendGroup({commit}, data){
       return new Promise((resolve, reject) => {
         delFriendGroup(data).then(response => {
+          resolve();
+        }).catch(error => {
+          reject(error);
+        })
+      })
+    },
+    //删除好友
+    deleteFriend({commit}, data){
+      return new Promise((resolve, reject) => {
+        deleteFriend(data).then(response => {
           resolve();
         }).catch(error => {
           reject(error);

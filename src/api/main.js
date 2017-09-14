@@ -129,3 +129,11 @@ export function delFriendGroup(data) {
     data
   })
 }
+
+export function deleteFriend(data) {
+  return axios({
+    url: '/v1/delete_friend',
+    method: 'post',
+    data
+  })
+}
