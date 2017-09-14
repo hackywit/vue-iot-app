@@ -77,6 +77,8 @@ export default {
 		this.$store.state.selected = 'monitor';
 //		this.interval = setInterval(this.getAllData, 1000);
 		//this.getAllData();
+    //TODO:由于缓存的失败找不到原因，先在这边是获取到用户信息，作为暂时的处理，后期再找bug
+    this.$store.dispatch('getUserinfo');
 	},
 	mounted () {
 	},

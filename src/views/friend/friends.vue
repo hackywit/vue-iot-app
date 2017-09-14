@@ -153,7 +153,10 @@
       },
       addFriend() {
         this.showAddFriend = false;
-        this.$store.dispatch('addFriend', this.friendInfo).then(() => {
+        let postObj ={};
+        postObj.friendName = this.friendInfo.friendName;
+        postObj.userType = this.friendInfo.userType;
+        this.$store.dispatch('addFriend', JSON.stringify(postObj)).then(() => {
           console.log('添加好友成功！');
           this.$store.dispatch('getFriends');
           this.$router.push({path: '/friends'});

@@ -64,8 +64,6 @@
         }).catch(err => {
           console.log('登录失败！');
         });
-        //TODO:由于缓存的失败找不到原因，先在这边是获取到用户信息，作为暂时的处理，后期再找bug
-        this.$store.dispatch('getUserinfo');
       },
       closeAlert()
       {

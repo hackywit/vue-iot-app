@@ -79,7 +79,7 @@
     data () {
       return {
         //界面DOM展示有关
-        isShow: false,
+        isShow: true,
         openDialog: false,
         delGroupDialog: false,
         userIndex: '',
@@ -117,6 +117,8 @@
     },
     created () {
       this.isShow = this.$store.state.user.userinfo.userType === 'producter';
+      console.log("----------" + this.isShow);
+      console.log("----------" + this.$store.state.user.userinfo.userType);
       this.$store.dispatch('getDevices');
 //      this.interval = setInterval(this.getALLDeviceStatus, 2000);
     },

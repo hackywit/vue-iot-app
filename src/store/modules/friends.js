@@ -65,13 +65,11 @@ const friends = {
 			})
 		},
 		//添加好友
-		addFriend({ commit }, friendInfo) {
+		addFriend({ commit }, data) {
 			return new Promise((resolve, reject) => {
-				addFriend(friendInfo).then(response => {
-					console.log(response);
+				addFriend(data).then(response => {
 					resolve();
 				}).catch(error => {
-					console.log(error);
 					reject(error);
 				})
 			})
