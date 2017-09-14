@@ -23,12 +23,6 @@ const user = {
 		SET_USERTYPE: (state, usertype) => {
 			state.userinfo.usertype = usertype;
 		},
-		SET_USERID: (state, user_id) => {
-			state.userinfo.userId = user_id;
-		},
-		SET_TOKEN: (state, token) => {
-			state.token = token;
-		},
 		SET_USERINFO: (state, userinfo) => {
 			state.userinfo = userinfo;
 		}
@@ -51,18 +45,14 @@ const user = {
 			return new Promise((resolve, reject) => {
 				login(userinfo.userType, userinfo.userName, userinfo.password).then(response => {
 					const data = response.data;
-					//登录成功设置cookie字段
-					Cookies.set('username', userinfo.userName, { expires: 365});
-					Cookies.set('userid', data.userId, { expires: 365 });
-					Cookies.set('password', userinfo.password, { expires: 365 });
-					Cookies.set('usertype', userinfo.userType, { expires: 365 });
-					const token = 'username=' + Cookies.get('username') +
-									';password=' + Cookies.get('password') +
-									';usertype=' + Cookies.get('usertype') +
-									';userid=' + Cookies.get('userid');
+          // // 设置cookie字段
+          // Cookies.set('username', userinfo.userName, {expires: 365});
+          // Cookies.set('userid', data.userId, {expires: 365});
+          // Cookies.set('usertype', userinfo.userType, {expires: 365});
+          //
+          // Cookies.set('path', '/', {expires: 365});
 					commit('SET_USERNAME', userinfo.userName);
 					commit('SET_USERTYPE', userinfo.userType);
-					commit('SET_TOKEN', token);
 					resolve();
 				}).catch(error => {
 					reject(error);
