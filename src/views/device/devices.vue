@@ -16,10 +16,11 @@
       <mu-list-item v-if="isShow" title="产品" class='list-item' @click='getProductList'>
         <mu-icon slot="left" value="playlist_add_check" :size='30'/>
       </mu-list-item>
-      <mu-list-item v-for='(item,deviceGroupIndex) in deviceLists' :key='item.deviceGroupName' :title='item.deviceGroupName'
+      <mu-list-item v-for='(item,deviceGroupIndex) in deviceLists' :key='item.deviceGroupName'
+                    :title='item.deviceGroupName'
                     :open='true' class='group' toggleNested>
         <mu-icon-menu slot='left' icon='more_vert'>
-          <mu-menu-item title="分享设备组" @click='shareGroup(item.deviceGroupName)'/>
+          <mu-menu-item title="分享设备组" @click='openShareDeviceGroupDialog(deviceGroupIndex)'/>
           <mu-menu-item title="删除设备组" @click='openDeleteGroupDialog(deviceGroupIndex)'/>
         </mu-icon-menu>
         <mu-list-item v-for='(sub,deviceIndex) in item.deviceInformation' :key='sub.deviceAlias'
@@ -46,6 +47,17 @@
       </mu-list-item>
     </mu-list>
     <!-- add device group dialog -->
+    <mu-dialog :open='shareDeviceGroupDialog' :title='deviceGroup.deviceGroupName' @close='closeDialog'>
+        <mu-list-item v-for="(friendGroup,friendGroupIndex) in this.$store.state.friendMap.friendList" :title="friendGroup.groupName" :open='false' toggleNested>
+          <mu-list-item v-for="(friend,friendIndex) in friendGroup.friends" :key="friendIndex"
+                        :value="friend.friendName"
+                        :title="friend.friendName" slot='nested'>
+            <mu-checkbox slot="left" class="demo-checkbox" :nativeValue="friend.friendId" v-model="friendIdList"/>
+          </mu-list-item>
+        </mu-list-item>
+      <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
+      <mu-flat-button slot='actions' @click='shareDeviceGroup' primary label='确定'/>
+    </mu-dialog>
     <mu-dialog :open='addGroupDialog' title='添加设备分组' @close='closeDialog'>
       <mu-text-field hintText='新增设备分组名称' v-model='group_name'></mu-text-field>
       <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
@@ -82,8 +94,13 @@
         isShow: true,
         openDialog: false,
         delGroupDialog: false,
+        shareDeviceGroupDialog: false,
+        addGroupDialog: false,
+        deleteDialog: false,
         userIndex: '',
         value: 0,
+        friendValue: 0,
+        friendIdList: [],//这个是checkbox的value集合
         //界面数据展示有关
         device: {
           deviceId: '',
@@ -108,8 +125,6 @@
           vertical: 'top',
           horizontal: 'right'
         },
-        addGroupDialog: false,
-        deleteDialog: false,
         group_name: '',
         titleStyle: 'titleStyle',
         interval: 0
@@ -117,9 +132,8 @@
     },
     created () {
       this.isShow = this.$store.state.user.userinfo.userType === 'producter';
-      console.log("----------" + this.isShow);
-      console.log("----------" + this.$store.state.user.userinfo.userType);
       this.$store.dispatch('getDevices');
+      this.friendIdList = [];//不初始化，缓存可能会影响某些操作
 //      this.interval = setInterval(this.getALLDeviceStatus, 2000);
     },
     mounted () {
@@ -158,6 +172,23 @@
         this.addGroupDialog = false;
         this.deleteDialog = false;
         this.delGroupDialog = false;
+        this.shareDeviceGroupDialog = false;
+      },
+      //分享设备组设备
+      shareDeviceGroup(){
+        this.shareDeviceGroupDialog = false;
+        //拼凑需要传过去的post数据
+        let postObj = {};
+        let i = 0;
+        postObj.deviceGroupName = this.deviceGroup.deviceGroupName;
+        postObj.besharedFriendlist = [];
+        this.friendIdList.forEach((friendId)=>{
+            let obj = {};
+            obj.beSharedUserId = friendId;
+            postObj.besharedFriendlist[i] = obj;
+            i++;
+        });
+        this.$store.dispatch('shareDeviceGroup', JSON.stringify(postObj));
       },
       //添加设备分组
       addGroupName() {
@@ -176,7 +207,7 @@
         this.delGroupDialog = false;
         let data = {};
         data.deviceGroupId = this.deviceGroup.deviceGroupId;
-        this.$store.dispatch('delDeviceGroup',JSON.stringify(data)).then(()=>{
+        this.$store.dispatch('delDeviceGroup', JSON.stringify(data)).then(() => {
           this.$store.dispatch('getDevices');
           console.log('添加设备分组成功');
         }).catch(err => {
@@ -207,14 +238,16 @@
       },
       cancelDeviceShare() {
         this.deleteDialog = false;
+        this.friendIdList = [];
         //将得到的数据分发给store中的取消分享的事件
         let postObj = {};
         postObj.deviceId = this.device.deviceId;
         postObj.besharedId = this.device.beSharedUser[this.userIndex].beSharedId;
         const data = JSON.stringify(postObj);
-        this.$store.dispatch('cancelDeviceShare', data);
-        //删除设备后及时刷新一次
-        this.$store.dispatch('getDevices');
+        this.$store.dispatch('cancelDeviceShare', data).then(() => {
+          //删除设备后及时刷新一次
+          this.$store.dispatch('getDevices');
+        })
       },
       getProductList() {
         this.$store.dispatch('getProducts').then(() => {
@@ -224,10 +257,12 @@
           console.log('获取产品列表失败!');
         });
       },
-      shareGroup(name) {
-        console.log(name);
-        this.$store.commit('SET_SHAREDEVICEGROUP', name);
-        this.$router.push({path: '/devices/share'});
+      openShareDeviceGroupDialog(deviceGroupIndex) {
+        this.deviceGroup.deviceGroupId = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceGroupId;
+        this.deviceGroup.deviceGroupName = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceGroupName;
+        //查找到好友信息并缓存到store中
+        this.$store.dispatch('getFriends');
+        this.shareDeviceGroupDialog = true;
       },
       getALLDeviceStatus() {
         this.$store.dispatch('getALLDeviceStatus').then(() => {
@@ -259,8 +294,8 @@
   }
 
   .titleStyle {
-    padding-left: 0px;
-    margin-left: 0px;
+    padding-left: 0;
+    margin-left: 0;
   }
 
   .list-item {

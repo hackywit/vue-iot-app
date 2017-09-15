@@ -5,7 +5,7 @@
         <mu-bottom-nav-item value="monitor" title="监控" icon="ondemand_video" />
         <mu-bottom-nav-item value="devices" title="设备" icon="devices_other"   />
         <mu-bottom-nav-item value="friends" title="好友" icon="group"   />
-        <mu-bottom-nav-item value="strategy" title="策略" icon="books"   />
+        <!--<mu-bottom-nav-item value="strategy" title="策略" icon="books"   />-->
         <mu-bottom-nav-item value="me" title="我" icon="home"  />
      </mu-bottom-nav>
     </mu-paper>

@@ -20,6 +20,7 @@ const friendMap = {
         groupName: '',
         friends: [
           {
+            friendId:'',
             friendName: '',
             userType: ''
           }

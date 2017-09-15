@@ -10,7 +10,7 @@
     <div class="page-part">
       <mu-list>
         <mu-list-item v-for='(item,index) in productList' :key='item.productKey' :title='item.productName'
-                      :describeText="item.productDesc" :open='false' class='group' toggleNested >
+                      :describeText="item.productDesc" :open='false' class='group' toggleNested>
           <mu-icon-menu slot="leftAvatar" icon="settings_system_daydream" tooltip="操作">
             <mu-menu-item title="修改" @click='openEditDialog(item)'/>
             <mu-menu-item title="删除" @click='openDelDialog(item)'/>
@@ -69,9 +69,9 @@
     data () {
       return {
         //模板临时变量
-        device:{
-            deviceId:'',
-            deviceAlias: ''
+        device: {
+          deviceId: '',
+          deviceAlias: ''
         },
         product: {
           productKey: '',
@@ -94,7 +94,7 @@
       }
     },
     created () {
-      this.initData();
+      this.$store.dispatch('getDeviceGroup');
     },
     computed: {
       productList() {
@@ -111,9 +111,6 @@
         //也可以在组件属性加to='/devices/adddevice'进行页面导航，不推荐
         this.$router.push('/devices/adddevice');
       },
-      initData() {
-        this.$store.dispatch('getDeviceGroup');
-      },
       handleClose () {
         this.openDialog = false;
       },
@@ -128,7 +125,7 @@
         this.product = value;
         this.delProduct = true;
       },
-      openDelDeviceDialog(index,deviceIndex,){
+      openDelDeviceDialog(index, deviceIndex,){
         // 先找到当前index下的设备名称，保存到模板的数据项中
         this.device.deviceAlias = this.$store.state.devices.productList[index].deviceList[deviceIndex].deviceAlias;
         this.device.deviceId = this.$store.state.devices.productList[index].deviceList[deviceIndex].deviceId;
@@ -192,12 +189,12 @@
         this.addGroup = true;
       },
       allocGroup() {
+        this.addGroup = false;
         this.$store.dispatch('updateDeviceGroup', this.updateGroup).then(() => {
           //这边只需要将当前的index下的按钮隐藏即可，也就是触发改变$store下数据，响应式改变DOM布局
           this.$store.commit('SET_ISSEHLLED', true);
           this.toastMsg = '分配到设备组成功！';
           this.showToast();
-          this.addGroup = false;
         }).catch(err => {
         });
       },

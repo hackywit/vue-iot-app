@@ -12,7 +12,6 @@ import friends from '@/views/friend/friends'
 
 import addDevice from '@/views/device/addDevice'
 import deviceInfo from '@/views/device/deviceInfo'
-import shareDevice from '@/views/device/shareDevice'
 import productList from '@/views/device/productList'
 import productInfo from '@/views/device/productInfo'
 
@@ -80,11 +79,6 @@ export default new Router({
               path: '/devices/infor',
               name: 'deviceInfo',
               component: deviceInfo
-            },
-            {
-              path: '/devices/share',
-              name: 'shareDevice',
-              component: shareDevice
             }
           ]
         },

@@ -212,10 +212,8 @@ const devices = {
     shareDeviceGroup({commit}, data) {
       return new Promise((resolve, reject) => {
         shareDeviceGroup(data).then(response => {
-          console.log(response);
           resolve();
         }).catch(error => {
-          console.log(error);
           reject(error);
         })
       })
