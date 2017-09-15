@@ -198,13 +198,10 @@ const devices = {
     },
     //分享设备
     shareDevice({commit}, data) {
-      commit('SET_SHAREDEVICEGROUP', '');
       return new Promise((resolve, reject) => {
         shareDevice(data).then(response => {
-          console.log(response);
           resolve();
         }).catch(error => {
-          console.log(error);
           reject(error);
         })
       })
