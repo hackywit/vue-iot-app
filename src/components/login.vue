@@ -24,7 +24,6 @@
       <mu-list @itemClick="closeBottomSheet">
         <mu-sub-header>请选择找回密码的方式</mu-sub-header>
         <mu-list-item to='/getpassword/tel' title="手机号码验证"/>
-        <mu-list-item to='/getpassword/email' title="邮箱验证"/>
       </mu-list>
     </mu-bottom-sheet>
   </div>
@@ -59,10 +58,10 @@
         }
         //将界面输入框的数据分配到store中去处理，验证用户名密码是否正确
         this.$store.dispatch('userLogin', this.userinfo).then(() => {
-          console.log('登录成功！');
           this.$router.push({path: '/monitor'});
         }).catch(err => {
-          console.log('登录失败！');
+          this.alertDialog = true;
+          this.alertText = this.$store.state.user.error.errorMessage;
         });
       },
       closeAlert()

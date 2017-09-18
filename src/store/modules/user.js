@@ -1,4 +1,4 @@
-import { login, register, getUserinfo, updatePassword } from '@/api/main';
+import { login, register, getUserinfo, updatePassword,forgetPassword } from '@/api/main';
 import Cookies from 'js-cookie';
 
 const user = {
@@ -14,7 +14,13 @@ const user = {
 			company: '',
 			userType: ''
 		},
-		token: ''
+    //错误消息提示
+    error:{
+		  errorNumber: 0,
+      errorMessage: ''
+    },
+    //忘记密码相关
+    verificationCode: ''
 	},
 	mutations: {
 		SET_USERNAME: (state, name) => {
@@ -25,7 +31,13 @@ const user = {
 		},
 		SET_USERINFO: (state, userinfo) => {
 			state.userinfo = userinfo;
-		}
+		},
+		SET_ERROR: (state, errorInfo) => {
+		  state.error = errorInfo;
+    },
+    SET_VERIFICATIONCODE: (state, verificationCode)=> {
+		  state.verificationCode = verificationCode;
+    }
 	},
 
 	actions: {
@@ -33,9 +45,12 @@ const user = {
 		userRegister({ commit }, userinfo) {
 			return new Promise((resolve, reject) => {
 				register(userinfo).then(response => {
-					const data = response.data;
 					resolve();
 				}).catch(error => {
+          let errorInfor = {};
+          errorInfor.errorNumber = error.code;
+          errorInfor.errorMessage = error.message;
+          commit('SET_ERROR', errorInfor);
 					reject(error);
 				})
 			})
@@ -55,6 +70,10 @@ const user = {
 					commit('SET_USERTYPE', userinfo.userType);
 					resolve();
 				}).catch(error => {
+				  let errorInfor = {};
+				  errorInfor.errorNumber = error.code;
+				  errorInfor.errorMessage = error.message;
+          commit('SET_ERROR', errorInfor);
 					reject(error);
 				})
 			})
@@ -84,7 +103,22 @@ const user = {
 					reject(error);
 				})
 			})
-		}
+		},
+    forgetPassword({commit}, data){
+      return new Promise((resolve, reject) => {
+        forgetPassword(data).then(response => {
+          const data = response.data.message;
+          commit('SET_VERIFICATIONCODE',data);
+          resolve();
+        }).catch(error => {
+          let errorInfor = {};
+          errorInfor.errorNumber = error.code;
+          errorInfor.errorMessage = error.message;
+          commit('SET_ERROR', errorInfor);
+          reject(error);
+        })
+      })
+    }
 	}
 };
 

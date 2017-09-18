@@ -137,3 +137,11 @@ export function deleteFriend(data) {
     data
   })
 }
+
+export function forgetPassword(data) {
+  return axios({
+    url: '/v1/forget_password',
+    method: 'post',
+    data
+  })
+}

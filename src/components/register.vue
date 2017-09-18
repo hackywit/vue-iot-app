@@ -73,7 +73,7 @@ export default {
         this.alertText = '密码不能小于6位';
         return
       }
-      if(this.userinfo.password != this.retypePwd) {
+      if(this.userinfo.password !== this.retypePwd) {
         this.alertText = '两次输入的密码不一致,请重新输入';
         return;
       }
@@ -90,18 +90,18 @@ export default {
     userRegister() {
       this.userinfo.country = this.countryList[this.country];
       this.userinfo.province = regions[this.province].name;
-      
+
       if(!this.checkUserInput()) {
         this.alertDialog = true;
         return;
       }
-      
+
       console.log(this.userinfo);
       this.$store.dispatch('userRegister', this.userinfo).then(() => {
-        console.log('注册成功！请登录');
         this.$router.push({ path: '/' });
       }).catch(err => {
-        console.log('注册失败！');
+        this.alertDialog = true;
+        this.alertText = this.$store.state.user.error.errorMessage;
       });
     },
     countryChange() {
