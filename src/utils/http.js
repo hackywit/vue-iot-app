@@ -7,7 +7,8 @@ import axios from 'axios'
 // axios 配置
 axios.defaults.timeout = 5000;
 //这边不能写在配置文件中，打包的时候会忽略
-axios.defaults.baseURL = "http://127.0.0.1:80";
+axios.defaults.baseURL = "http://47.93.224.34:80";
+// axios.defaults.baseURL = "http://127.0.0.1:80";
 // axios.defaults.baseURL = process.env.BASE_API;
 axios.defaults.withCredentials = true;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
