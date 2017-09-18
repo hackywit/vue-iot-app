@@ -156,6 +156,8 @@
       this.isShow = this.$store.state.user.userinfo.userType === 'producter';
       this.$store.dispatch('getDevices');
       this.friendIdList = [];//不初始化，缓存可能会影响某些操作
+      //每隔2s获取获取设备状态
+      this.getALLDeviceStatus();
 //      this.interval = setInterval(this.getALLDeviceStatus, 2000);
     },
     mounted () {
@@ -238,13 +240,11 @@
         postObj.deviceIdList = deviceIdList;
         postObj.besharedFriendlist = [];
         this.friendIdList.forEach((friendId) => {
-          console.log("++++++++++++++" + friendId);
           let obj = {};
           obj.beSharedUserId = friendId;
           postObj.besharedFriendlist[i] = obj;
           i++;
         });
-        console.log("++++++++++++++" + JSON.stringify(postObj));
         this.$store.dispatch('shareDevice', JSON.stringify(postObj));
       },
       //添加设备分组

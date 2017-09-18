@@ -66,7 +66,8 @@ const devices = {
             providerName: '',	//设备商名称
             userName: '',		//使用商名称
             productKey: '',		//产品key
-            isSelled: ''//判断设备是否已经卖出，也就是分配到了设备组
+            isSelled: '',//判断设备是否已经卖出，也就是分配到了设备组
+            status: ''//设备状态
           }
         ]
       }
@@ -99,15 +100,10 @@ const devices = {
       //这边要注意，不能用this.productListIndex,this是指的全局vue对象，写错就不能实现功能
       state.productList[state.productListIndex].deviceList[state.productDeviceListIndex].isSelled = bool;
     },
-    UPDATE_DEVICESTATUS: (state, status) => {
-      console.log(status);
-      status.forEach((p) => {
-        console.log('forEach(p):' + p.deviceName);
+    UPDATE_DEVICESTATUS: (state, data) => {
+      data.forEach((p) => {
         state.deviceLists.forEach((list) => {
           list.deviceInformation.forEach((pd) => {
-            console.log(pd);
-            console.log(pd.deviceName);
-            console.log('p:' + p.deviceName);
             if (p.deviceName === pd.deviceName) {
               pd.status = p.status;
             }
@@ -115,7 +111,6 @@ const devices = {
           })
         })
       });
-      console.log(state.deviceLists);
       state.deviceLists = state.deviceLists.sort();
     },
     ADD_DEVICESTATUS: (state, status) => {
@@ -327,11 +322,8 @@ const devices = {
     getALLDeviceStatus({commit}) {
       return new Promise((resolve, reject) => {
         getALLDeviceStatus().then(response => {
-          console.log(response);
           const data = response.data.deviceStatusList;
-          //const data = Object.keys(response.data).map(key=> response.data[key]);
-          //alert(data instanceof Array);
-          console.log(data);
+          console.log("+++++++++" + data);
           commit('UPDATE_DEVICESTATUS', data);
           resolve();
         }).catch(error => {
