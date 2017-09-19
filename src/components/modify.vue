@@ -2,9 +2,9 @@
 	<div class="modify">
 		<!--header-->
 		<mu-appbar :title="title" class='header'>
-			<router-link to='/me' slot='left'>
-				<mu-icon-button icon='keyboard_arrow_left' style='color: #fff'/>
-			</router-link>
+			<!--<router-link to='/me' slot='left'>-->
+				<mu-icon-button slot='left' icon='keyboard_arrow_left' style='color: #fff' @click="this.history.back()"/>
+			<!--</router-link>-->
 		</mu-appbar>
 		<div class="page-part">
 			<br/>
@@ -29,7 +29,7 @@
 				</mu-select-field>
 			</div>
 
-			</br>
+			<br/>
 			<mu-raised-button label="保存" class="demo-raised-button" primary  @click="udpateInfo"/>
 		</div>
 		<mu-dialog :open="tipDialog" title="提示">

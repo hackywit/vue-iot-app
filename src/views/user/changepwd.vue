@@ -7,7 +7,7 @@
 			</router-link>
 		</mu-appbar>
 		<div class="page-part">
-			<mu-text-field label="新密码" hintText="请输入新密码" v-model="userinfo.userName"></mu-text-field></br>
+			<mu-text-field label="新密码" hintText="请输入新密码" v-model="userinfo.userName"></mu-text-field><br/>
 		</div>
     </div>
 </template>
@@ -52,7 +52,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang='scss' scoped> 
+<style lang='scss' scoped>
 .userinfo {
 	list-style: none;
 	li {
