@@ -41,14 +41,10 @@ const devices = {
               }
             ],
             productKey: '',		//产品key
+            productName: '',		//产品key
             status: ''
           }
         ]
-      }
-    ],
-    deviceGroup: [
-      {
-        groupName: ''
       }
     ],
     shareDeviceGroup: '',
@@ -86,9 +82,6 @@ const devices = {
     },
     SET_DEVICELIST: (state, list) => {
       state.deviceLists = list;
-    },
-    SET_DEVICEGROUP: (state, group) => {
-      state.deviceGroup = group;
     },
     SET_PRODUCTLIST: (state, list) => {
       state.productList = list;
@@ -187,9 +180,7 @@ const devices = {
       })
     },
     setDeviceInfo({commit}, obj) {
-      console.log(obj);
-      commit('SET_DEVICEINFO', obj.deviceinfo);
-      commit('SET_GROUPNAME', obj.groupName);
+      commit('SET_DEVICEINFO', obj);
     },
     //分享设备
     shareDevice({commit}, data) {
@@ -233,20 +224,6 @@ const devices = {
         addDeviceGroup(addData).then(response => {
           resolve();
         }).catch(error => {
-          reject(error);
-        })
-      })
-    },
-    getDeviceGroup({commit}) {
-      return new Promise((resolve, reject) => {
-        getDeviceGroup().then(response => {
-          console.log(response);
-          const data = response.data.deviceGroup;
-          console.log(data);
-          commit('SET_DEVICEGROUP', data);
-          resolve();
-        }).catch(error => {
-          console.log(error);
           reject(error);
         })
       })

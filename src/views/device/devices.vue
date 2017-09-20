@@ -14,7 +14,7 @@
     <mu-list vlaue='selected'>
       <!--此处不选择v-show是应为这个指令不支持模板，会出错-->
       <mu-list-item v-if="isShow" title="产品" class='list-item' @click='getProductList'>
-        <mu-icon slot="left" value="playlist_add_check" :size='30'/>
+        <mu-icon slot="left" value="storage" :size='30'/>
       </mu-list-item>
       <mu-list-item v-for='(item,deviceGroupIndex) in deviceLists' :key='item.deviceGroupName'
                     :title='item.deviceGroupName'
@@ -39,7 +39,7 @@
         				<span slot='right'>状态：{{sub.status}}</span>
         			</span>
           <mu-icon-menu slot="right" icon="menu" tooltip="操作">
-            <mu-menu-item title="查看" to='/devices/infor' @click='getDeviceInfo(sub, item.deviceGroup)'/>
+            <mu-menu-item title="查看" to='/devices/infor' @click='getDeviceInfo(sub, item.deviceGroupName)'/>
             <mu-menu-item title="分享" @click='openShareDeviceDialog(deviceGroupIndex,deviceIndex)'/>
             <mu-menu-item title="取消分享" @click='openDelDialog(deviceGroupIndex,deviceIndex)'/>
           </mu-icon-menu>
@@ -164,9 +164,6 @@
       this.trigger = this.$refs.button.$el;
     },
     computed: {
-      deviceInfo() {
-        return this.$store.state.devices.deviceinfo;
-      },
       deviceLists() {
         return this.$store.state.devices.deviceLists;
       }
@@ -273,15 +270,10 @@
       },
       //查看设备详细信息
       getDeviceInfo(value, group) {
-        let obj = {};
-        obj.deviceinfo = value;
-        obj.groupName = group;
-        //console.log(obj);
-        this.$store.dispatch('setDeviceInfo', obj);
-        this.$store.dispatch('getDeviceGroup');
+        value.groupName = group;
+        console.log("value"+JSON.stringify(value));
+        this.$store.dispatch('setDeviceInfo', value);
         this.closeDialog();
-        this.$store.dispatch('getDeviceData', obj);
-
       },
       //打开删除设备对话框
       openDelDialog(deviceGroupIndex, deviceIndex) {
