@@ -12,11 +12,9 @@
       <mu-select-field v-if='getType === "tel"' v-model='userinfo.userType' label='请选择用户类型'>
         <mu-menu-item value='producter' title='生产设备厂商'/>
         <mu-menu-item value='user' title='用户'/>
-      </mu-select-field>
-      <div v-if='getType === "tel"'>
-        <mu-text-field v-model="userinfo.verificationCode" class='check-text' hintText="请输入验证码"/>
-        <mu-raised-button :label="countDown" class="check-btn" primary @click='getTelCode' :disabled='disabled'/>
-      </div>
+      </mu-select-field><br/>
+      <mu-text-field class="verify-text-field" v-model="userinfo.verificationCode" hintText="请输入验证码"/>
+      <mu-raised-button :label="countDown" primary @click='getTelCode' :disabled='disabled'/>
       <mu-raised-button label="下一步" class="next-btn" primary @click="verify"/>
     </div>
     <mu-dialog :open='resetPwdDialog' title='重置密码' @close='closeDialog'>
@@ -115,19 +113,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='scss' scoped>
-  .check-tel {
-    display: inline-block;
-    position: relative;
-    .check-text {
-      margin-top: 15px;
-      text-align: left;
-      padding-right: 120px;
-    }
-    .check-btn {
-      position: absolute;
-      top: 5px;
-      right: 2px;
-      z-index: 100;
+  .getpassword {
+    .verify-text-field {
+      width: 154px;
     }
   }
 

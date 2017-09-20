@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div>
     <h3>用户登录</h3>
     <!--v-model指令实现数据的双向绑定，是个语法糖-->
     <mu-text-field label="用户名" hintText="请输入用户名" v-model="userinfo.userName"></mu-text-field>
@@ -11,7 +11,7 @@
       <mu-menu-item value='user' title='用户'/>
     </mu-select-field>
     <br/>
-    <mu-raised-button label="登录" class="demo-raised-button" primary @click="userlogin"/>
+    <mu-raised-button label="登录" primary @click="userlogin"/>
     <div class="link">
       <mu-flat-button to='/register' label="注册账号" class="flat-button" primary/>
       <mu-flat-button label="找回密码" class="flat-button" primary @click='openBottomSheet'/>
@@ -90,7 +90,6 @@
     width: 180px;
     height: 40px;
     .flat-button {
-      //border: 1px solid red;
       &:first-child {
         float: left;
       }
