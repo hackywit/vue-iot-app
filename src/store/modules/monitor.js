@@ -3,7 +3,9 @@ import { getAllData,deviceUpdateData } from '@/api/monitor';
 
 const monitors = {
 	state: {
-		monitorInfo: {},
+	  /**
+	   * http请求获取到的变量
+	   */
 		monitorData:  [
       {
         deviceAlias: "",
@@ -21,7 +23,11 @@ const monitors = {
         timestamp: 0,
         version: 0
       }
-    ]
+    ],
+    /**
+     * 界面间传递数据的变量
+     */
+    monitorInfo: {},
   },
 	mutations: {
 		SET_MONITORINFO: (state, infor) => {

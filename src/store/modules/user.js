@@ -27,7 +27,7 @@ const user = {
 			state.userinfo.userName = name;
 		},
 		SET_USERTYPE: (state, usertype) => {
-			state.userinfo.usertype = usertype;
+			state.userinfo.userType = usertype;
 		},
 		SET_USERINFO: (state, userinfo) => {
 			state.userinfo = userinfo;
@@ -56,18 +56,17 @@ const user = {
 			})
 		},
 		//用户登录
-		userLogin({ commit }, userinfo) {
+		login({ commit }, data) {
 			return new Promise((resolve, reject) => {
-				login(userinfo.userType, userinfo.userName, userinfo.password).then(response => {
-					const data = response.data;
+				login(JSON.stringify(data)).then(response => {
           // // 设置cookie字段
           // Cookies.set('username', userinfo.userName, {expires: 365});
           // Cookies.set('userid', data.userId, {expires: 365});
           // Cookies.set('usertype', userinfo.userType, {expires: 365});
           //
           // Cookies.set('path', '/', {expires: 365});
-					commit('SET_USERNAME', userinfo.userName);
-					commit('SET_USERTYPE', userinfo.userType);
+					commit('SET_USERNAME', data.userName);
+					commit('SET_USERTYPE', data.userType);
 					resolve();
 				}).catch(error => {
 				  let errorInfor = {};

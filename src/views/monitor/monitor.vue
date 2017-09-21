@@ -43,63 +43,65 @@
 </template>
 
 <script>
-  import Sortable from 'sortablejs'
-  import MuFlexbox from "../../../node_modules/muse-ui/src/flexbox/flexbox";
   export default {
-    components: {MuFlexbox},
     data () {
       return {
+        /**
+         * 界面布局相关变量
+         */
         flag: false,
+        /**
+         * 界面触发事件相关变量
+         */
         targetOrigin: {
           vertical: 'top',
           horizontal: 'right'
         },
-        tableData: [],
-        newList: [],
+        /**
+         * 动画相关变量，定时器之类
+         */
         interval: 0
       }
     },
     created() {
       this.$store.state.selected = 'monitor';
-      //TODO:由于缓存的失败找不到原因，先在这边是获取到用户信息，作为暂时的处理，后期再找bug
-      this.$store.dispatch('getUserinfo');
-//		this.interval = setInterval(this.getAllData, 1000);
-      this.getAllData();
-      this.flag = true;
+      this.$store.dispatch('getAllData').then(() => {
+        this.flag = true;
+      });
     },
-    mounted () {
+    beforeDestroy () {
+      console.log('清除定时器' + this.interval);
+      clearInterval(this.interval);
     },
     computed: {
+      //这边界面的数据是要和store中的数据进行关联的
       monitorData() {
         return this.$store.state.monitors.monitorData;
       }
     },
     filters: {
+      //过滤函数，对每个时间戳进行处理
       time: function (timestamp) {
         return new Date(parseInt(timestamp) * 1000).toLocaleString().substr(0, 17)
       }
     },
     methods: {
+      /**
+       * 界面间的数据传递
+       */
       getMonitorInfo(index, key, value) {
-        let infor = {};
-        infor.deviceAlias = this.$store.state.monitors.monitorData[index].deviceAlias;
-        infor.deviceName = this.$store.state.monitors.monitorData[index].deviceName;
-        infor.productKey = this.$store.state.monitors.monitorData[index].productKey;
-        infor.productName = this.$store.state.monitors.monitorData[index].productName;
-        infor.version = this.$store.state.monitors.monitorData[index].version;
-        infor.monitorName = key;
-        infor.monitorData = value;
-        this.$store.commit('SET_MONITORINFO', infor);
+        let postObj = {};
+        postObj.deviceAlias = this.$store.state.monitors.monitorData[index].deviceAlias;
+        postObj.deviceName = this.$store.state.monitors.monitorData[index].deviceName;
+        postObj.productKey = this.$store.state.monitors.monitorData[index].productKey;
+        postObj.productName = this.$store.state.monitors.monitorData[index].productName;
+        postObj.version = this.$store.state.monitors.monitorData[index].version;
+        postObj.monitorName = key;
+        postObj.monitorData = value;
+        this.$store.commit('SET_MONITORINFO', postObj);
         this.$router.push('/monitor/infor');
-      },
-      getAllData() {
-        this.$store.dispatch('getAllData');
       }
     },
-    beforeDestroy () {
-      console.log('清除定时器' + this.interval);
-      clearInterval(this.interval);
-    }
   }
 </script>
 

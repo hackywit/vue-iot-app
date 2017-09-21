@@ -1,11 +1,7 @@
 import axios from '@/utils/http'
 
 //用户注册
-export function register(userinfo) {
-	console.log('register');
-	console.log(userinfo);
-	const data = userinfo;
-	console.log(data);
+export function register(data) {
 	return axios({
 		url: '/v1/register',
 		method: 'post',
@@ -14,12 +10,7 @@ export function register(userinfo) {
 }
 
 //用户登录
-export function login(userType, userName, password) {
-	const data = {
-		userType,
-		userName,
-		password
-	};
+export function login(data) {
 	return axios({
 		url: '/v1/login',
 		method: 'post',

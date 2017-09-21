@@ -168,7 +168,7 @@
     },
     created () {
       this.isShow = this.$store.state.user.userinfo.userType === 'producter';
-      this.$store.dispatch('getDevices').then(() =>{
+      this.$store.dispatch('getDevices').then(() => {
         this.getALLDeviceStatus();
         this.flag = true;
       });
@@ -287,7 +287,7 @@
       //查看设备详细信息
       getDeviceInfo(value, group) {
         value.groupName = group;
-        console.log("value--------"+JSON.stringify(value));
+        console.log("value--------" + JSON.stringify(value));
         this.$store.dispatch('setDeviceInfo', value);
         this.closeDialog();
         this.$router.push('/devices/infor');

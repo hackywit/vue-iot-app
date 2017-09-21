@@ -2,11 +2,11 @@
   <div>
     <h3>用户登录</h3>
     <!--v-model指令实现数据的双向绑定，是个语法糖-->
-    <mu-text-field label="用户名" hintText="请输入用户名" v-model="userinfo.userName"></mu-text-field>
+    <mu-text-field label="用户名" hintText="请输入用户名" v-model="userName"></mu-text-field>
     <br/>
-    <mu-text-field label="密 码" hintText="请输入密码" type="password" v-model="userinfo.password"></mu-text-field>
+    <mu-text-field label="密 码" hintText="请输入密码" type="password" v-model="password"></mu-text-field>
     <br/>
-    <mu-select-field v-model='userinfo.userType' label='请选择用户类型'>
+    <mu-select-field v-model='userType' label='请选择用户类型'>
       <mu-menu-item value='producter' title='生产设备厂商'/>
       <mu-menu-item value='user' title='用户'/>
     </mu-select-field>
@@ -31,53 +31,61 @@
 
 <script>
   export default {
-    name: 'login',
     data () {
       return {
-        //与界面逻辑的变量
+        /**
+         * 界面布局相关变量
+         */
+        //弹出窗口相关变量
         alertDialog: false,
-        alertText: '',
         bottomSheet: false,
-
-        //与界面展示数据有关的变量，由于不需要默认展示，所以初始值为空
-        userinfo: {
-          userType: '',
-          userName: '',
-          password: ''
-        }
+        /**
+         * v-model相关的变量
+         */
+        userType: '',
+        userName: '',
+        password: '',
+        /**
+         * 界面展示数据相关变量
+         */
+        alertText: '',
       }
     },
     methods: {
-      userlogin()
-      {
+      /**
+       * 窗口的打开和关闭
+       */
+      closeAlert() {
+        this.alertDialog = false;
+      },
+      openBottomSheet() {
+        this.bottomSheet = true;
+      },
+      closeBottomSheet() {
+        this.bottomSheet = false;
+      },
+      /**
+       * 与store的数据交互
+       */
+      //登录
+      userlogin() {
         //校验---密码不能为空
-        if (this.userinfo.password.length <= 0) {
+        if (this.password.length <= 0) {
           this.alertDialog = true;
           this.alertText = '密码不能为空';
           return
         }
-        //将界面输入框的数据分配到store中去处理，验证用户名密码是否正确
-        this.$store.dispatch('userLogin', this.userinfo).then(() => {
+        let postObj = {};
+        postObj.userType = this.userType;
+        postObj.userName = this.userName;
+        postObj.password = this.password;
+        this.$store.dispatch('login', postObj).then(() => {
           this.$router.push({path: '/monitor'});
         }).catch(err => {
           this.alertDialog = true;
           this.alertText = this.$store.state.user.error.errorMessage;
         });
       },
-      closeAlert()
-      {
-        this.alertDialog = false;
-      }
-      ,
-      openBottomSheet()
-      {
-        this.bottomSheet = true;
-      }
-      ,
-      closeBottomSheet()
-      {
-        this.bottomSheet = false;
-      }
     }
   }
 </script>
