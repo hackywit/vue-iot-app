@@ -9,7 +9,7 @@ import {
   updateFriendGroup,
   delFriendGroup,
   deleteFriend
-} from '@/api/main';
+} from '@/api/friend';
 
 
 const friendMap = {

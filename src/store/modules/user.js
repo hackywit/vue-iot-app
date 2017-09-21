@@ -1,4 +1,4 @@
-import { login, register, getUserinfo, updatePassword,forgetPassword,changeUserInfo } from '@/api/main';
+import { login, register, getUserinfo, updatePassword,forgetPassword,changeUserInfo } from '@/api/user';
 import Cookies from 'js-cookie';
 
 const user = {

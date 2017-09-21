@@ -10,7 +10,7 @@
         <mu-flexbox-item class='flex-item'>时间</mu-flexbox-item>
         <mu-flexbox-item class='flex-item'>操作</mu-flexbox-item>
       </mu-flexbox>
-      <div id='sortable'>
+      <div id='sortable' v-show="flag">
         <div v-for='(device,index) in monitorData' :key='index'>
           <mu-flexbox class='flex-box'>
             <span class="monitor-dev">产品: {{ device.productName }}</span>
@@ -49,6 +49,7 @@
     components: {MuFlexbox},
     data () {
       return {
+        flag: false,
         targetOrigin: {
           vertical: 'top',
           horizontal: 'right'
@@ -60,10 +61,11 @@
     },
     created() {
       this.$store.state.selected = 'monitor';
-//		this.interval = setInterval(this.getAllData, 1000);
-      this.getAllData();
       //TODO:由于缓存的失败找不到原因，先在这边是获取到用户信息，作为暂时的处理，后期再找bug
       this.$store.dispatch('getUserinfo');
+//		this.interval = setInterval(this.getAllData, 1000);
+      this.getAllData();
+      this.flag = true;
     },
     mounted () {
     },

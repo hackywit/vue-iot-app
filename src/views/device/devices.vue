@@ -1,5 +1,5 @@
 <template>
-  <div class="devices">
+  <div>
     <!--header-->
     <mu-appbar title="设备" class='header'>
       <mu-icon-button icon="add" slot="right" ref='button' @click='toggle'/>
@@ -13,10 +13,10 @@
     </mu-popover>
     <mu-list vlaue='selected'>
       <!--此处不选择v-show是应为这个指令不支持模板，会出错-->
-      <mu-list-item v-if="isShow" title="产品" class='list-item' @click='getProductList'>
+      <mu-list-item v-show="isShow" title="产品" class='list-item' @click='getProductList'>
         <mu-icon slot="left" value="storage" :size='30'/>
       </mu-list-item>
-      <mu-list-item v-for='(item,deviceGroupIndex) in deviceLists' :key='item.deviceGroupName'
+      <mu-list-item v-show="flag" v-for='(item,deviceGroupIndex) in deviceLists' :key='item.deviceGroupName'
                     :title='item.deviceGroupName'
                     :open='true' class='group' toggleNested>
         <mu-icon-menu slot='left' icon='more_vert'>
@@ -105,19 +105,44 @@
   export default {
     data () {
       return {
-        //界面DOM展示有关
-        isShow: true,
+        /**
+         * 界面布局有关变量
+         */
+        //界面选择性展示相关变量
+        isShow: false,
+        flag: false,
+        //界面弹出窗口相关变量
         openDialog: false,
         delGroupDialog: false,
         shareDeviceGroupDialog: false,
         addGroupDialog: false,
         deleteDialog: false,
         shareDeviceDialog: false,
-        userIndex: '',
+        /**
+         * v-model相关
+         */
         value: 0,
-        friendValue: 0,
+        group_name: '',
+        /**
+         * 界面触发事件相关
+         */
+        trigger: null,
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'right'
+        },
+        targetOrigin: {
+          vertical: 'top',
+          horizontal: 'right'
+        },
+        /**
+         * 索引相关
+         */
+        userIndex: '',
         friendIdList: [],//这个是checkbox的value集合
-        //界面数据展示有关
+        /**
+         * 从store中获取到的和本界面数据展示相关的变量
+         */
         device: {
           deviceId: '',
           beSharedUser: [
@@ -131,24 +156,13 @@
           deviceGroupName: '',
           deviceGroupId: ''
         },
-
-        //和单个设备分享有关的缓存变量
         deviceshare: {
           deviceName: '',
           deviceId: ''
         },
-
-        trigger: null,
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        },
-        targetOrigin: {
-          vertical: 'top',
-          horizontal: 'right'
-        },
-        group_name: '',
-        titleStyle: 'titleStyle',
+        /**
+         * 动画相关，定时器之类
+         */
         interval: 0
       }
     },
@@ -156,13 +170,14 @@
       this.isShow = this.$store.state.user.userinfo.userType === 'producter';
       this.$store.dispatch('getDevices').then(() =>{
         this.getALLDeviceStatus();
+        this.flag = true;
       });
       this.friendIdList = [];//不初始化，缓存可能会影响某些操作
       //每隔2s获取获取设备状态
 //      this.interval = setInterval(this.getALLDeviceStatus, 2000);
     },
     mounted () {
-      this.trigger = this.$refs.button.$el;
+      this.trigger = this.$refs.button.$el;//触发添加按钮dom
     },
     computed: {
       deviceLists() {
