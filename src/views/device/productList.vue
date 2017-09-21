@@ -34,7 +34,7 @@
       <mu-flat-button slot='actions' @click='addProduct' primary label='添加'/>
     </mu-dialog>
     <mu-dialog :open='editDialog' title='修改产品信息' @close='closeDialog'>
-      <mu-text-field label='产品名称' v-model='product.productName'></mu-text-field>
+      <mu-text-field label='产品名称' v-model='product.productName'></mu-text-field><br/>
       <mu-text-field label='描述' multiLine :rows="3" :rowsMax="6" v-model='product.productDesc'></mu-text-field>
       <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
       <mu-flat-button slot='actions' @click='updateProduct' primary label='保存'/>

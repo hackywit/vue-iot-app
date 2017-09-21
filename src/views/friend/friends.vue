@@ -30,7 +30,7 @@
     </mu-list>
     <!-- add friend group dialog -->
     <mu-dialog :open='showAddFriend' title='添加好友' @close='closeDialog'>
-      <mu-text-field hintText='请输入好友用户名' v-model='friendInfo.friendName'></mu-text-field>
+      <mu-text-field hintText='请输入好友用户名' v-model='friendInfo.friendName'></mu-text-field><br/>
       <mu-select-field v-model='friendInfo.userType' label='请选择好友用户类型'>
         <mu-menu-item value='producter' title='生产设备厂商'/>
         <mu-menu-item value='user' title='用户'/>

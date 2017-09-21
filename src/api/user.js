@@ -33,7 +33,6 @@ export function getUserinfo() {
 		url: '/v1/user_information',
 		method: 'get'
 	})
-
 }
 
 //修改密码
