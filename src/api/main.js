@@ -145,3 +145,11 @@ export function forgetPassword(data) {
     data
   })
 }
+
+export function changeUserInfo(data) {
+  return axios({
+    url: '/v1/change_userinfor',
+    method: 'post',
+    data
+  })
+}

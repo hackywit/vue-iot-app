@@ -25,9 +25,9 @@
         <p><span>所在设备组：</span> {{ deviceInfo.groupName }} </p>
       </div>
       <div>
-        <mu-select-field v-model='updateGroup.changeGroupName' label='移动设备至' class='move-select'>
+        <mu-select-field v-model='updateGroup.deviceGroupId' label='移动设备至' class='move-select'>
           <mu-menu-item v-for='(deviceList,index) in this.$store.state.devices.deviceLists' :key='index'
-                        :title='deviceList.deviceGroupName' :value='deviceList.deviceGroupName'></mu-menu-item>
+                        :title='deviceList.deviceGroupName' :value='deviceList.deviceGroupId'></mu-menu-item>
         </mu-select-field>
         <mu-flat-button label="移动分组" class="demo-flat-button" primary @click='updateDeviceGroup'/>
         <br/>
@@ -46,7 +46,8 @@
 
         updateGroup: {
           deviceId: '',
-          changeGroupName: ''
+          deviceGroupId: '',
+          shareId: ''
         },
         interval: 0,
         toast: false,
@@ -55,14 +56,15 @@
       }
     },
     created() {
+      console.log("deviceInfo-----"+ JSON.stringify(this.$store.state.devices.deviceinfo));
       this.deviceInfo = this.$store.state.devices.deviceinfo;
     },
     computed: {},
     methods: {
       updateDeviceGroup() {
         this.updateGroup.deviceId = this.deviceInfo.deviceId;
-        console.log(this.updateGroup);
-        this.$store.dispatch('updateDeviceGroup', this.updateGroup).then(() => {
+        this.updateGroup.shareId = this.deviceInfo.shareId;
+        this.$store.dispatch('updateDeviceGroup', JSON.stringify(this.updateGroup)).then(() => {
           console.log('更改设备组成功');
           //更改成功之后跳回之前的界面
           this.$router.push('/devices');

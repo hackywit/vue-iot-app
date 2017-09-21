@@ -39,7 +39,7 @@
         				<span slot='right'>状态：{{sub.status}}</span>
         			</span>
           <mu-icon-menu slot="right" icon="menu" tooltip="操作">
-            <mu-menu-item title="查看" to='/devices/infor' @click='getDeviceInfo(sub, item.deviceGroupName)'/>
+            <mu-menu-item title="查看" @click='getDeviceInfo(sub, item.deviceGroupName)'/>
             <mu-menu-item title="分享" @click='openShareDeviceDialog(deviceGroupIndex,deviceIndex)'/>
             <mu-menu-item title="取消分享" @click='openDelDialog(deviceGroupIndex,deviceIndex)'/>
           </mu-icon-menu>
@@ -154,10 +154,11 @@
     },
     created () {
       this.isShow = this.$store.state.user.userinfo.userType === 'producter';
-      this.$store.dispatch('getDevices');
+      this.$store.dispatch('getDevices').then(() =>{
+        this.getALLDeviceStatus();
+      });
       this.friendIdList = [];//不初始化，缓存可能会影响某些操作
       //每隔2s获取获取设备状态
-      this.getALLDeviceStatus();
 //      this.interval = setInterval(this.getALLDeviceStatus, 2000);
     },
     mounted () {
@@ -271,9 +272,10 @@
       //查看设备详细信息
       getDeviceInfo(value, group) {
         value.groupName = group;
-        console.log("value"+JSON.stringify(value));
+        console.log("value--------"+JSON.stringify(value));
         this.$store.dispatch('setDeviceInfo', value);
         this.closeDialog();
+        this.$router.push('/devices/infor');
       },
       //打开删除设备对话框
       openDelDialog(deviceGroupIndex, deviceIndex) {
@@ -308,7 +310,7 @@
       },
       getALLDeviceStatus() {
         this.$store.dispatch('getALLDeviceStatus').then(() => {
-          console.log('获取设备状态');
+          console.log('获取设备状态成功!');
         }).catch(err => {
           console.log('获取设备状态失败!');
         });

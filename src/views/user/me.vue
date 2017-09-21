@@ -9,7 +9,7 @@
 		<div class="page-part">
 			<mu-list>
 				<mu-list-item title='用户名' :afterText='userinfo.userName'>
-					<!--<mu-icon-menu slot="right" icon="keyboard_arrow_right"></mu-icon-menu>-->
+					<mu-icon-menu slot="right" icon="keyboard_arrow_right"></mu-icon-menu>
 				</mu-list-item>
 				<mu-list-item title='邮箱' :afterText='userinfo.email' to='/user/email'>
 					<mu-icon-menu slot="right" icon="keyboard_arrow_right"></mu-icon-menu>
@@ -23,7 +23,7 @@
 				<mu-list-item title='地址' :afterText='address' to='/user/address'>
 					<mu-icon-menu slot="right" icon="keyboard_arrow_right"></mu-icon-menu>
 				</mu-list-item>
-				<mu-list-item title='用户类型' :afterText='userinfo.userType === "user" ? "普通用户" : "生产设备厂商"' to='/user/userType'>
+				<mu-list-item title='用户类型' :afterText='userinfo.userType === "user" ? "普通用户" : "生产设备厂商"'>
 					<mu-icon-menu slot="right" icon="keyboard_arrow_right"></mu-icon-menu>
 				</mu-list-item>
 				<mu-list-item title='修改密码' to='/user/password'>
@@ -81,7 +81,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang='scss' scoped> 
+<style lang='scss' scoped>
 .userinfo {
 	list-style: none;
 	li {

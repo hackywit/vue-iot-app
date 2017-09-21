@@ -45,9 +45,9 @@
       <mu-flat-button slot='actions' @click='deleteProduct' primary label='删除'/>
     </mu-dialog>
     <mu-dialog :open='addGroup' title='分配至设备组' @close='closeDialog'>
-      <mu-select-field class='select' v-model="updateGroup.changeGroupName" label="请选择设备组">
-        <mu-menu-item v-for='(item,index) in deviceGroupList' :key='index' :value='item.groupName'
-                      :title='item.groupName'/>
+      <mu-select-field class='select' v-model="updateGroup.deviceGroupId" label="请选择设备组">
+        <mu-menu-item v-for='(item,index) in this.$store.state.devices.deviceLists' :key='index' :value='item.deviceGroupId'
+                      :title='item.deviceGroupName'/>
       </mu-select-field>
       <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
       <mu-flat-button slot='actions' @click='allocGroup' primary label='确定'/>
@@ -80,7 +80,8 @@
         },
         updateGroup: {
           deviceId: '',
-          changeGroupName: ''
+          deviceGroupId: '',
+          shareId:''
         },
         deviceGroup: '',
         addDialog: false,
@@ -93,15 +94,9 @@
         toastMsg: ''
       }
     },
-    created () {
-      this.$store.dispatch('getDeviceGroup');
-    },
     computed: {
       productList() {
         return this.$store.state.devices.productList;
-      },
-      deviceGroupList() {
-        return this.$store.state.devices.deviceGroup;
       }
     },
     methods: {
@@ -190,7 +185,8 @@
       },
       allocGroup() {
         this.addGroup = false;
-        this.$store.dispatch('updateDeviceGroup', this.updateGroup).then(() => {
+        this.updateGroup.shareId = this.$store.state.user.userinfo.userId;
+        this.$store.dispatch('updateDeviceGroup', JSON.stringify(this.updateGroup)).then(() => {
           //这边只需要将当前的index下的按钮隐藏即可，也就是触发改变$store下数据，响应式改变DOM布局
           this.$store.commit('SET_ISSEHLLED', true);
           this.toastMsg = '分配到设备组成功！';

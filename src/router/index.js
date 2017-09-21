@@ -23,7 +23,6 @@ import friendInfo from '@/views/friend/friendInfo'
 
 import me from '@/views/user/me'
 import getpassword from '@/views/user/getpwd'
-import settings from '@/views/user/settings'
 import stratagy from '@/views/strategy/strategy'
 import createStrategy from '@/views/strategy/createStrategy'
 
@@ -114,11 +113,6 @@ export default new Router({
           component: me
         }
       ]
-    },
-    {
-      path: '/settings',
-      name: 'settings',
-      component: settings
     },
     {
       path: '/user/:info',

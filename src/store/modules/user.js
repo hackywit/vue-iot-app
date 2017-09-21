@@ -1,4 +1,4 @@
-import { login, register, getUserinfo, updatePassword,forgetPassword } from '@/api/main';
+import { login, register, getUserinfo, updatePassword,forgetPassword,changeUserInfo } from '@/api/main';
 import Cookies from 'js-cookie';
 
 const user = {
@@ -83,7 +83,6 @@ const user = {
 			return new Promise((resolve, reject) => {
 				getUserinfo().then(response => {
 					const data = response.data;
-					console.log(data);
 					commit('SET_USERINFO', data);
 					resolve();
 				}).catch(error => {
@@ -115,6 +114,15 @@ const user = {
           errorInfor.errorNumber = error.code;
           errorInfor.errorMessage = error.message;
           commit('SET_ERROR', errorInfor);
+          reject(error);
+        })
+      })
+    },
+    changeUserInfo({commit}, data){
+      return new Promise((resolve, reject) => {
+        changeUserInfo(data).then(response => {
+          resolve();
+        }).catch(error => {
           reject(error);
         })
       })

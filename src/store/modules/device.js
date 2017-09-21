@@ -2,7 +2,7 @@ import {
   addDevice, getDevices, shareDevice, getDeviceData, shareDeviceGroup,
   addDeviceGroup, getDeviceGroup, updateDeviceGroup,
   getProducts, addProduct, updateProduct, deleteProduct,
-  getDeviceStatus, getALLDeviceStatus, deleteDevice,cancelDeviceShare, delDeviceGroup
+  getDeviceStatus, getALLDeviceStatus, deleteDevice, cancelDeviceShare, delDeviceGroup
 } from '@/api/device';
 
 const devices = {
@@ -20,6 +20,8 @@ const devices = {
       userName: '',		//使用商名称
       productKey: '',		//产品key
       productName: '',	//产品名称
+      shareId: '',       //分享者id
+      shareName: '',     //分享者名字
       groupName: '',
       status: ''
     },
@@ -40,6 +42,8 @@ const devices = {
                 beSharedName: ''
               }
             ],
+            shareId: '',       //分享者id
+            shareName: '',     //分享者名字
             productKey: '',		//产品key
             productName: '',		//产品key
             status: ''
@@ -94,17 +98,15 @@ const devices = {
       state.productList[state.productListIndex].deviceList[state.productDeviceListIndex].isSelled = bool;
     },
     UPDATE_DEVICESTATUS: (state, data) => {
-      data.forEach((p) => {
-        state.deviceLists.forEach((list) => {
-          list.deviceInformation.forEach((pd) => {
-            if (p.deviceName === pd.deviceName) {
-              pd.status = p.status;
+      data.forEach((deviceStatus) => {
+        state.deviceLists.forEach((deviceList) => {
+          deviceList.deviceInformation.forEach((deviceInformation) => {
+            if (deviceInformation.deviceId === deviceStatus.deviceId){
+              deviceInformation.status = deviceStatus.status;
             }
-            console.log(pd.status);
           })
         })
       });
-      state.deviceLists = state.deviceLists.sort();
     },
     ADD_DEVICESTATUS: (state, status) => {
       state.deviceinfo = {...state.deviceinfo, status: status};
@@ -231,7 +233,7 @@ const devices = {
     updateDeviceGroup({commit}, info) {
       return new Promise((resolve, reject) => {
         //这边是将一个对象输出为一个json格式的字符串JSON.stringify(info)
-        updateDeviceGroup(JSON.stringify(info)).then(response => {
+        updateDeviceGroup(info).then(response => {
           console.log(response);
           const data = response.data;
           console.log(data);
@@ -300,7 +302,6 @@ const devices = {
       return new Promise((resolve, reject) => {
         getALLDeviceStatus().then(response => {
           const data = response.data.deviceStatusList;
-          console.log("+++++++++" + data);
           commit('UPDATE_DEVICESTATUS', data);
           resolve();
         }).catch(error => {
