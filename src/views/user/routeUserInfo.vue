@@ -182,14 +182,11 @@
           case ('address'): {
             this.userInfo.country = this.countryList[this.countryIndex];
             this.userInfo.province = this.provinceList[this.provinceIndex].name;
-            console.log("country-------" + this.userInfo.country);
-            console.log("province-------" + JSON.stringify(this.userInfo.province));
             this.changeUserInfo(this.userInfo.country, this.userInfo.province, this.userInfo.company, this.userInfo.tel, this.userInfo.email);
             this.$router.go(-1);
             break;
           }
           case('password'): {
-            console.log('password');
             this.updatePassword();
             break;
           }

@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import logo from '../../assets/logo.png'
+import logo from '../../../static/logo.png'
 export default {
 	created() {
 		this.$store.dispatch('getUserinfo')

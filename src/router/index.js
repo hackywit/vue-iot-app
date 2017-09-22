@@ -1,10 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Login from '@/components/login'
-import Register from '@/components/register'
-import modify from '@/components/modify'
-import main from '@/components/main'
+import app from '@/App'
 
 import monitor from '@/views/monitor/monitor'
 import devices from '@/views/device/devices'
@@ -21,6 +18,9 @@ import monitorInfo from '@/views/monitor/monitorInfo'
 import newFriends from '@/views/friend/newFriends'
 
 import me from '@/views/user/me'
+import routeUserInfo from '@/views/user/routeUserInfo'
+import Login from '@/views/user/login'
+import Register from '@/views/user/register'
 import getpassword from '@/views/user/getpwd'
 import stratagy from '@/views/strategy/strategy'
 import createStrategy from '@/views/strategy/createStrategy'
@@ -42,11 +42,11 @@ export default new Router({
     },
     {
       path: '/main',
-      component: main,
+      component: app,
       children: [
         {
           path: '/main',
-          component: main
+          component: app
         },
         {
           path: '/monitor',
@@ -110,8 +110,8 @@ export default new Router({
     },
     {
       path: '/user/:info',
-      name: 'modify',
-      component: modify
+      name: 'routeUserInfo',
+      component: routeUserInfo
     },
     {
       path: '/getpassword/:type',
