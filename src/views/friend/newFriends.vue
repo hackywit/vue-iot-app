@@ -2,16 +2,14 @@
   <div class="new-friends">
     <!--header-->
     <mu-appbar title='新的好友' class='header'>
-      <router-link to='/friends' slot='left'>
-        <mu-icon-button icon='keyboard_arrow_left' style='color: #fff'/>
-      </router-link>
+      <mu-icon-button icon='keyboard_arrow_left' style='color: #fff' slot="left" @click="this.history.back()"/>
     </mu-appbar>
     <div class="page-part">
       <mu-tabs :value="activeTab" @change="handleTabChange" class='tabs'>
-        <mu-tab value="tab1" title="好友请求"/>
-        <mu-tab value="tab2" title="添加好友"/>
+        <mu-tab value="requestFriendTab" title="好友请求"/>
+        <mu-tab value="applyFriendTab" title="添加好友"/>
       </mu-tabs>
-      <div v-if="activeTab === 'tab1'">
+      <div v-if="activeTab === 'requestFriendTab'">
         <mu-list-item v-for='sub in unreceivedList' :key='sub.friendName' :title='sub.friendName' slot='nested'>
           <mu-icon slot="left" value="person"/>
           <span slot='describe'>
@@ -22,7 +20,7 @@
                             @click='receiveFriend(sub.friendName, sub.userType)'/>
         </mu-list-item>
       </div>
-      <div v-if="activeTab === 'tab2'">
+      <div v-if="activeTab === 'applyFriendTab'">
         <mu-list-item v-for='sub in unconfirmedList' :key='sub.friendName' :title='sub.friendName' slot='nested'>
           <mu-icon slot="left" value="person"/>
           <span slot='describe'>
@@ -39,7 +37,7 @@
   export default {
     data () {
       return {
-        activeTab: 'tab1'
+        activeTab: 'requestFriendTab'
       }
     },
     created () {
@@ -47,10 +45,10 @@
     },
     computed: {
       unreceivedList() {
-        return this.$store.state.friendMap.unreceivedList;
+        return this.$store.state.friend.unreceivedList;
       },
       unconfirmedList() {
-        return this.$store.state.friendMap.unconfirmedList;
+        return this.$store.state.friend.unconfirmedList;
       }
     },
     methods: {
@@ -58,13 +56,12 @@
         this.activeTab = val;
       },
       receiveFriend(name, type) {
-        var data = '{ "userName": "' + name + '", "userType": "' + type + ' "}';
+        let data = '{ "userName": "' + name + '", "userType": "' + type + ' "}';
         this.$store.dispatch('receiveFriend', data).then(() => {
-          console.log('添加好友成功');
           this.$store.dispatch('getFriends');
           this.$store.dispatch('getUnreceivedList');
         }).catch(err => {
-          console.log('添加好友失败');
+          console.log(err);
         })
       }
     }
@@ -72,11 +69,7 @@
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='scss' scoped>
-  /*.group {
-      background: #e1f5fe;
-  }*/
   .new-friends {
     position: fixed;
     top: 0;
@@ -99,13 +92,10 @@
       }
     }
   }
-
   .mu-tab-link {
     color: #000;
   }
-
   .mu-tab-active {
     color: #2196f3;
   }
-
 </style>

@@ -7,8 +7,11 @@ import {
 
 const devices = {
   state: {
-    //本地页面间的传值变量
-    productListIndex: '',
+    /**
+     * 页面之间传值的变量
+     */
+    //productList中的选中的那个产品信息
+    productInfo: {},
     productDeviceListIndex: '',
 
     deviceinfo: {
@@ -25,7 +28,29 @@ const devices = {
       groupName: '',
       status: ''
     },
-    deviceData: {},
+    /**
+     * http请求到的数据缓存
+     */
+    productList: [
+      {
+        productKey: '',		//
+        productName: '',	//
+        productDesc: '',	//
+        deviceList: [
+          {
+            deviceId: '',		//设备ID
+            deviceName: '',		//设备序列号
+            deviceAlias: '',	//设备别名（设备名）
+            deviceSecret: '',	//设备绑定密码
+            providerName: '',	//设备商名称
+            userName: '',		//使用商名称
+            productKey: '',		//产品key
+            isSelled: '',//判断设备是否已经卖出，也就是分配到了设备组
+            status: ''//设备状态
+          }
+        ]
+      }
+    ],
     deviceLists: [
       {
         deviceGroupName: '',
@@ -51,47 +76,26 @@ const devices = {
         ]
       }
     ],
-    shareDeviceGroup: '',
-    productList: [
-      {
-        productKey: '',		//
-        productName: '',	//
-        productDesc: '',	//
-        deviceList: [
-          {
-            deviceId: '',		//设备ID
-            deviceName: '',		//设备序列号
-            deviceAlias: '',	//设备别名（设备名）
-            deviceSecret: '',	//设备绑定密码
-            providerName: '',	//设备商名称
-            userName: '',		//使用商名称
-            productKey: '',		//产品key
-            isSelled: '',//判断设备是否已经卖出，也就是分配到了设备组
-            status: ''//设备状态
-          }
-        ]
-      }
-    ],
-    product: {}
+    deviceData: {},
   },
   mutations: {
+    /**
+     * 界面传值用到函数
+     */
+    SET_PRODUCTINFO: (state, data) => {
+       state.productInfo = data;
+    },
     SET_DEVICEINFO: (state, info) => {
       state.deviceinfo = info;
     },
     SET_DEVICEDATA: (state, data) => {
       state.deviceData = data;
     },
-    SET_GROUPNAME: (state, name) => {
-      state.deviceinfo.groupName = name;
-    },
     SET_DEVICELIST: (state, list) => {
       state.deviceLists = list;
     },
     SET_PRODUCTLIST: (state, list) => {
       state.productList = list;
-    },
-    SET_SHAREDEVICEGROUP: (state, group) => {
-      state.shareDeviceGroup = group;
     },
     SET_ISSEHLLED: (state, bool) => {
       //这边要注意，不能用this.productListIndex,this是指的全局vue对象，写错就不能实现功能
@@ -101,7 +105,7 @@ const devices = {
       data.forEach((deviceStatus) => {
         state.deviceLists.forEach((deviceList) => {
           deviceList.deviceInformation.forEach((deviceInformation) => {
-            if (deviceInformation.deviceId === deviceStatus.deviceId){
+            if (deviceInformation.deviceId === deviceStatus.deviceId) {
               deviceInformation.status = deviceStatus.status;
             }
           })
@@ -115,29 +119,33 @@ const devices = {
   },
 
   actions: {
-    //删除设备组
+    /**
+     * 无需与服务器交互数据的设值
+     */
+    setDeviceInfo({commit}, obj) {
+      commit('SET_DEVICEINFO', obj);
+    },
+    /**
+     * 获取服务器数据存在store中的函数
+     */
     delDeviceGroup({commit}, data){
       return new Promise((resolve, reject) => {
-        delDeviceGroup(data).then(response => {
+        delDeviceGroup(JSON.stringify(data)).then(response => {
           resolve();
         }).catch(error => {
           reject(error);
         })
       })
     },
-
-    //取消设备分享
     cancelDeviceShare({commit}, data){
       return new Promise((resolve, reject) => {
-        cancelDeviceShare(data).then(response => {
+        cancelDeviceShare(JSON.stringify(data)).then(response => {
           resolve();
         }).catch(error => {
           reject(error);
         })
       })
     },
-
-    //删除设备
     deleteDevice({commit}, deviceId){
       return new Promise((resolve, reject) => {
         const data = `{"deviceId":"${deviceId}"}`;
@@ -148,19 +156,9 @@ const devices = {
         })
       })
     },
-
-    //注册设备
-    addDevice({commit}, deviceinfo) {
-      console.log(deviceinfo);
+    addDevice({commit}, data) {
       return new Promise((resolve, reject) => {
-        const addData = '{ "productKey": "' + deviceinfo.productKey +
-          '", "deviceLists":[  {"deviceName": "' + deviceinfo.serial +
-          '", "deviceAlias": "' + deviceinfo.device_name + '"}]}';
-        console.log(addData);
-        addDevice(addData).then(response => {
-          console.log(response);
-          const data = response.data;
-          console.log(data);
+        addDevice(JSON.stringify(data)).then(response => {
           resolve();
         }).catch(error => {
           console.log(error);
@@ -168,7 +166,6 @@ const devices = {
         })
       })
     },
-    //查看用户拥有设备
     getDevices({commit}) {
       return new Promise((resolve, reject) => {
         getDevices().then(response => {
@@ -181,13 +178,9 @@ const devices = {
         })
       })
     },
-    setDeviceInfo({commit}, obj) {
-      commit('SET_DEVICEINFO', obj);
-    },
-    //分享设备
     shareDevice({commit}, data) {
       return new Promise((resolve, reject) => {
-        shareDevice(data).then(response => {
+        shareDevice(JSON.stringify(data)).then(response => {
           resolve();
         }).catch(error => {
           reject(error);
@@ -196,18 +189,16 @@ const devices = {
     },
     shareDeviceGroup({commit}, data) {
       return new Promise((resolve, reject) => {
-        shareDeviceGroup(data).then(response => {
+        shareDeviceGroup(JSON.stringify(data)).then(response => {
           resolve();
         }).catch(error => {
           reject(error);
         })
       })
     },
-    //获取设备数据
     getDeviceData({commit}, info) {
       return new Promise((resolve, reject) => {
         const addData = '{ "productKey": "' + info.productKey + '", "deviceName": "' + info.deviceName + '}';
-        //console.log(addData);
         getDeviceData(addData).then(response => {
           console.log(response);
           const data = response.data;
@@ -219,11 +210,9 @@ const devices = {
         })
       })
     },
-    addDeviceGroup({commit}, name) {
+    addDeviceGroup({commit}, data) {
       return new Promise((resolve, reject) => {
-        const addData = `{ "deviceGroupName": "${name}"}`;
-        console.log("------------------------" + addData);
-        addDeviceGroup(addData).then(response => {
+        addDeviceGroup(JSON.stringify(data)).then(response => {
           resolve();
         }).catch(error => {
           reject(error);

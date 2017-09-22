@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import user from './modules/user';
-import friendMap from './modules/friends';
+import friend from './modules/friends';
 import monitors from './modules/monitor';
 import devices from './modules/device';
 import getters from './getters';
@@ -13,7 +13,7 @@ const store = new Vuex.Store({
   modules: {
   	selected: 'monitor',
     user,
-    friendMap,
+    friend,
     monitors,
     devices,
     strategy

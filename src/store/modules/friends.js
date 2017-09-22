@@ -12,7 +12,7 @@ import {
 } from '@/api/friend';
 
 
-const friendMap = {
+const friend = {
   state: {
     friendList: [
       {
@@ -33,19 +33,8 @@ const friendMap = {
         userType: '',
         flag: false
       }
-    ],	//待接受好友
-    unconfirmedList: [], //待对方确认好友请求
-    friendGroup: [
-      {
-        groupId: -1,
-        groupName: ''
-      }
     ],
-    friendInfo: {
-      friendName: '',
-      userType: '',
-      groupName: ''
-    }
+    unconfirmedList: [],
   },
   mutations: {
     SET_FRIENDLIST: (state, list) => {
@@ -56,32 +45,26 @@ const friendMap = {
     },
     SET_UNCONFIRMED: (state, list) => {
       state.unconfirmedList = list;
-    },
-    SET_FRIENDGROUP: (state, groups) => {
-      state.friendGroup = groups;
-    },
-    SET_FRIENDINFO: (state, infor) => {
-      state.friendInfo = infor;
     }
   },
 
   actions: {
     addFriendGroup({commit}, data) {
-      console.log("++++++++++" + data);
       return new Promise((resolve, reject) => {
-        addFriendGroup(data).then(response => {
+        addFriendGroup(JSON.stringify(data)).then(response => {
           resolve();
         }).catch(error => {
+          console.log(error);
           reject(error);
         })
       })
     },
-    //添加好友
     addFriend({commit}, data) {
       return new Promise((resolve, reject) => {
-        addFriend(data).then(response => {
+        addFriend(JSON.stringify(data)).then(response => {
           resolve();
         }).catch(error => {
+          console.log(error);
           reject(error);
         })
       })
@@ -93,6 +76,7 @@ const friendMap = {
           commit('SET_FRIENDLIST', data);
           resolve();
         }).catch(error => {
+          console.log(error);
           reject(error);
         })
       })
@@ -101,7 +85,6 @@ const friendMap = {
       return new Promise((resolve, reject) => {
         getUnreceivedList().then(response => {
           const data = response.data.unreceivedFriendlist;
-          console.log(data);
           commit('SET_UNRECEIVED', data);
           resolve();
         }).catch(error => {
@@ -114,7 +97,6 @@ const friendMap = {
       return new Promise((resolve, reject) => {
         getUnconfirmedList().then(response => {
           const data = response.data.unconfirmedFriendlist;
-          console.log(data);
           commit('SET_UNCONFIRMED', data);
           resolve();
         }).catch(error => {
@@ -123,11 +105,9 @@ const friendMap = {
         })
       })
     },
-    //接受好友请求
     receiveFriend({commit}, data) {
       return new Promise((resolve, reject) => {
         receiveFriend(data).then(response => {
-          console.log(response);
           resolve();
         }).catch(error => {
           console.log(error);
@@ -135,48 +115,32 @@ const friendMap = {
         })
       })
     },
-    getFriendGroup({commit}) {
-      console.log('getFriendGroup');
-      return new Promise((resolve, reject) => {
-        getFriendGroup().then(response => {
-          console.log(response);
-          const data = response.data.friendGroup;
-          //const data = Object.keys(response.data).map(key=> response.data[key]);
-          console.log(data);
-          commit('SET_FRIENDGROUP', data);
-          resolve();
-        }).catch(error => {
-          console.log(error);
-          reject(error);
-        })
-      })
-    },
-    //更新好友分组
     updateFriendGroup({commit}, data) {
       return new Promise((resolve, reject) => {
-        updateFriendGroup(data).then(response => {
+        updateFriendGroup(JSON.stringify(data)).then(response => {
           resolve();
         }).catch(error => {
+          console.log(error);
           reject(error);
         })
       })
     },
-    //删除好友分组
     delFriendGroup({commit}, data){
       return new Promise((resolve, reject) => {
-        delFriendGroup(data).then(response => {
+        delFriendGroup(JSON.stringify(data)).then(response => {
           resolve();
         }).catch(error => {
+          console.log(error);
           reject(error);
         })
       })
     },
-    //删除好友
     deleteFriend({commit}, data){
       return new Promise((resolve, reject) => {
-        deleteFriend(data).then(response => {
+        deleteFriend(JSON.stringify(data)).then(response => {
           resolve();
         }).catch(error => {
+          console.log(error);
           reject(error);
         })
       })
@@ -184,4 +148,4 @@ const friendMap = {
   }
 };
 
-export default friendMap;
+export default friend;

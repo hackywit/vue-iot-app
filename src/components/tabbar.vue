@@ -16,15 +16,8 @@
 export default {
   data () {
     return {
-      //selected: 'monitor'
     }
   },
-  /*watch: {
-    selected: function(val, oldVal) {
-      //console.log(val);
-      this.$router.push('/'+val);
-    }
-  },*/
   computed: {
     selected() {
       console.log(this.$store.state.selected);

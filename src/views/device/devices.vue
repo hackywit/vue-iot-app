@@ -1,19 +1,16 @@
 <template>
   <div>
-    <!--header-->
     <mu-appbar title="设备" class='header'>
       <mu-icon-button icon="add" slot="right" ref='button' @click='toggle'/>
     </mu-appbar>
-    <!-- popmenu -->
     <mu-popover :open='openDialog' :autoPosition='false' :trigger='trigger' :anchorOrigin="anchorOrigin"
                 :targetOrigin="targetOrigin" @close="handleClose">
       <mu-menu>
-        <mu-menu-item title='添加设备组' @click='openAddGroup'/>
+        <mu-menu-item title='添加设备组' @click='openAddGroupDialog'/>
       </mu-menu>
     </mu-popover>
     <mu-list vlaue='selected'>
-      <!--此处不选择v-show是应为这个指令不支持模板，会出错-->
-      <mu-list-item v-show="isShow" title="产品" class='list-item' @click='getProductList'>
+      <mu-list-item v-show="isShow" title="产品" class='list-item' @click='gotoProductList'>
         <mu-icon slot="left" value="storage" :size='30'/>
       </mu-list-item>
       <mu-list-item v-show="flag" v-for='(item,deviceGroupIndex) in deviceLists' :key='item.deviceGroupName'
@@ -39,17 +36,15 @@
         				<span slot='right'>状态：{{sub.status}}</span>
         			</span>
           <mu-icon-menu slot="right" icon="menu" tooltip="操作">
-            <mu-menu-item title="查看" @click='getDeviceInfo(sub, item.deviceGroupName)'/>
+            <mu-menu-item title="查看" @click='gotoDeviceInfo(sub, item.deviceGroupName)'/>
             <mu-menu-item title="分享" @click='openShareDeviceDialog(deviceGroupIndex,deviceIndex)'/>
-            <mu-menu-item title="取消分享" @click='openDelDialog(deviceGroupIndex,deviceIndex)'/>
+            <mu-menu-item title="取消分享" @click='openCancelDeviceShareDialog(deviceGroupIndex,deviceIndex)'/>
           </mu-icon-menu>
         </mu-list-item>
       </mu-list-item>
     </mu-list>
-    <!-- add device group dialog -->
-    <!--单个设备分享弹出框-->
     <mu-dialog :open='shareDeviceDialog' :title='deviceshare.deciceName' @close='closeDialog'>
-      <mu-list-item v-for="(friendGroup,friendGroupIndex) in this.$store.state.friendMap.friendList"
+      <mu-list-item v-for="(friendGroup,friendGroupIndex) in this.$store.state.friend.friendList"
                     :title="friendGroup.groupName" :open='false' toggleNested>
         <mu-list-item v-for="(friend,friendIndex) in friendGroup.friends" :key="friendIndex"
                       :value="friend.friendName"
@@ -60,9 +55,8 @@
       <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
       <mu-flat-button slot='actions' @click='shareDevice' primary label='确定'/>
     </mu-dialog>
-    <!--设备组分享弹出框-->
     <mu-dialog :open='shareDeviceGroupDialog' :title='deviceGroup.deviceGroupName' @close='closeDialog'>
-      <mu-list-item v-for="(friendGroup,friendGroupIndex) in this.$store.state.friendMap.friendList"
+      <mu-list-item v-for="(friendGroup,friendGroupIndex) in this.$store.state.friend.friendList"
                     :title="friendGroup.groupName" :open='false' toggleNested>
         <mu-list-item v-for="(friend,friendIndex) in friendGroup.friends" :key="friendIndex"
                       :value="friend.friendName"
@@ -74,22 +68,20 @@
       <mu-flat-button slot='actions' @click='shareDeviceGroup' primary label='确定'/>
     </mu-dialog>
     <mu-dialog :open='addGroupDialog' title='添加设备分组' @close='closeDialog'>
-      <mu-text-field hintText='新增设备分组名称' v-model='group_name'></mu-text-field>
+      <mu-text-field hintText='新增设备分组名称' v-model='newDeviceGroupName'></mu-text-field>
       <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
-      <mu-flat-button slot='actions' @click='addGroupName' primary label='添加'/>
+      <mu-flat-button slot='actions' @click='addDeviceGroup' primary label='添加'/>
     </mu-dialog>
     <mu-dialog :open='delGroupDialog' title='删除设备分组' @close='closeDialog'>
       是否删除设备组：{{ deviceGroup.deviceGroupName }}
       <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
       <mu-flat-button slot='actions' @click='delDeviceGroup' primary label='删除'/>
     </mu-dialog>
-    <mu-dialog :open='deleteDialog' title='取消设备分享' @close='closeDialog'>
+    <mu-dialog :open='cancelDeviceShareDialog' title='取消设备分享' @close='closeDialog'>
       <p>确定撤销设备 {{device.deviceAlias}} 的分享?</p>
-      <!--让用户选择撤销的分享的用户-->
-      <mu-select-field v-model="value" :labelFocusClass="['label-foucs']" label="选择你需要取消分享的用户">
+      <mu-select-field v-model="beSharedId" :labelFocusClass="['label-foucs']" label="选择你需要取消分享的用户">
         <mu-menu-item v-for="(beSharedUser,userIndex) in device.beSharedUser" :key="userIndex"
-                      :value="beSharedUser.beSharedName" :title="beSharedUser.beSharedName"
-                      @click="setUserIndex(userIndex)"/>
+                      :value="beSharedUser.beSharedId" :title="beSharedUser.beSharedName"/>
       </mu-select-field>
       <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
       <mu-flat-button slot='actions' @click='cancelDeviceShare' primary label='确定'/>
@@ -101,7 +93,6 @@
 </template>
 
 <script>
-  import {mapState} from 'vuex'
   export default {
     data () {
       return {
@@ -116,16 +107,9 @@
         delGroupDialog: false,
         shareDeviceGroupDialog: false,
         addGroupDialog: false,
-        deleteDialog: false,
+        cancelDeviceShareDialog: false,
         shareDeviceDialog: false,
-        /**
-         * v-model相关
-         */
-        value: 0,
-        group_name: '',
-        /**
-         * 界面触发事件相关
-         */
+        //界面事件窗口相关变量
         trigger: null,
         anchorOrigin: {
           vertical: 'bottom',
@@ -136,15 +120,26 @@
           horizontal: 'right'
         },
         /**
-         * 索引相关
+         * v-model相关
          */
-        userIndex: '',
-        friendIdList: [],//这个是checkbox的value集合
+        beSharedId: '',
+        newDeviceGroupName: '',
         /**
-         * 从store中获取到的和本界面数据展示相关的变量
+         * 动画相关，定时器之类
          */
+        interval: 0,
+        /**
+         * 自定义变量
+         */
+        friendIdList: [],
+        //与store交互有关变量
+        deviceGroup: {
+          deviceGroupName: '',
+          deviceGroupId: ''
+        },
         device: {
           deviceId: '',
+          deviceAlias: '',
           beSharedUser: [
             {
               beSharedId: '',
@@ -152,29 +147,18 @@
             }
           ]
         },
-        deviceGroup: {
-          deviceGroupName: '',
-          deviceGroupId: ''
-        },
         deviceshare: {
           deviceName: '',
           deviceId: ''
         },
-        /**
-         * 动画相关，定时器之类
-         */
-        interval: 0
       }
     },
     created () {
+      /**
+       * 相关变量初始化
+       */
       this.isShow = this.$store.state.user.userinfo.userType === 'producter';
-      this.$store.dispatch('getDevices').then(() => {
-        this.getALLDeviceStatus();
-        this.flag = true;
-      });
-      this.friendIdList = [];//不初始化，缓存可能会影响某些操作
-      //每隔2s获取获取设备状态
-//      this.interval = setInterval(this.getALLDeviceStatus, 2000);
+      this.getDeviceAndStatus();
     },
     mounted () {
       this.trigger = this.$refs.button.$el;//触发添加按钮dom
@@ -185,21 +169,16 @@
       }
     },
     methods: {
-      toggle () {
-        this.openDialog = !this.openDialog;
-      },
-      handleClose () {
+      /**
+       * 界面布局相关函数
+       */
+      /*界面弹出窗口布局函数，弹出之前需要对窗口要用到的数据进行初始化*/
+      openAddGroupDialog () {
         this.openDialog = false;
-      },
-      //打开设备分组对话框
-      openAddGroup () {
-        this.openDialog = false;
+        this.newDeviceGroupName = '';
         this.addGroupDialog = true;
-        this.group_name = '';
       },
-      //打开删除设备组的对话框
       openDeleteGroupDialog(deviceGroupIndex){
-        //将即将要post过去删除设备组的数据存到data中
         this.deviceGroup.deviceGroupId = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceGroupId;
         this.deviceGroup.deviceGroupName = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceGroupName;
         this.delGroupDialog = true;
@@ -207,29 +186,68 @@
       openShareDeviceDialog(deviceGroupIndex, deviceIndex){
         this.deviceshare.deciceName = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceInformation[deviceIndex].deviceAlias;
         this.deviceshare.deciceId = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceInformation[deviceIndex].deviceId;
-        //查找到好友信息并缓存到store中
         this.$store.dispatch('getFriends');
         this.shareDeviceDialog = true;
       },
       openShareDeviceGroupDialog(deviceGroupIndex) {
         this.deviceGroup.deviceGroupId = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceGroupId;
         this.deviceGroup.deviceGroupName = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceGroupName;
-        //查找到好友信息并缓存到store中
         this.$store.dispatch('getFriends');
         this.shareDeviceGroupDialog = true;
       },
-      //关闭弹框
+      openCancelDeviceShareDialog(deviceGroupIndex, deviceIndex) {
+        this.device.deviceId = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceInformation[deviceIndex].deviceId;
+        this.device.beSharedUser = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceInformation[deviceIndex].beSharedUser;
+        this.device.deviceAlias = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceInformation[deviceIndex].deviceAlias;
+        this.cancelDeviceShareDialog = true;
+      },
       closeDialog () {
         this.addGroupDialog = false;
-        this.deleteDialog = false;
+        this.cancelDeviceShareDialog = false;
         this.delGroupDialog = false;
         this.shareDeviceGroupDialog = false;
         this.shareDeviceDialog = false;
       },
-      //分享设备组设备
+      //界面事件窗口布局函数
+      toggle () {
+        this.openDialog = !this.openDialog;
+      },
+      handleClose () {
+        this.openDialog = false;
+      },
+      /**
+       * 路由相关函数
+       */
+      gotoDeviceInfo(value, group) {
+        value.groupName = group;
+        this.$store.dispatch('setDeviceInfo', value).then(() => {
+          this.$router.push('/devices/infor');
+        });
+      },
+      gotoProductList() {
+        this.$store.dispatch('getProducts').then(() => {
+          this.$router.push('/devices/product/list');
+        }).catch(err => {
+          console.log(err);
+        });
+      },
+      /**
+       * 与store数据交互函数
+       */
+      /*界面内的数据交互*/
+      getDeviceAndStatus() {
+        this.$store.dispatch('getDevices').then(() => {
+          this.flag = true;//如果获取状态失败也显示
+          this.$store.dispatch('getALLDeviceStatus').then(() => {
+          }).catch(err => {
+            console.log(err);
+          });
+        }).catch(err => {
+          console.log(err);
+        });
+      },
+      /*与窗口交互数据的函数，需要在交互成功后关闭窗口*/
       shareDeviceGroup(){
-        this.shareDeviceGroupDialog = false;
-        //拼凑需要传过去的post数据
         let postObj = {};
         let i = 0;
         postObj.deviceGroupName = this.deviceGroup.deviceGroupName;
@@ -240,12 +258,12 @@
           postObj.besharedFriendlist[i] = obj;
           i++;
         });
-        this.$store.dispatch('shareDeviceGroup', JSON.stringify(postObj));
+        this.$store.dispatch('shareDeviceGroup', postObj).then(() => {
+          this.shareDeviceGroupDialog = false;
+          this.getDeviceAndStatus();
+        });
       },
-      //分享单个设备
       shareDevice(){
-        this.shareDeviceDialog = false;
-        //拼凑需要发送的post数据
         let postObj = {};
         let deviceIdList = [];
         let i = 0;
@@ -258,87 +276,48 @@
           postObj.besharedFriendlist[i] = obj;
           i++;
         });
-        this.$store.dispatch('shareDevice', JSON.stringify(postObj));
+        this.$store.dispatch('shareDevice', postObj).then(() => {
+          this.shareDeviceDialog = false;
+          this.getDeviceAndStatus();
+        });
       },
-      //添加设备分组
-      addGroupName() {
-        this.addGroupDialog = false;
-        if (this.group_name) {
-          this.$store.dispatch('addDeviceGroup', this.group_name).then(() => {
-            this.$store.dispatch('getDevices');
-            console.log('添加设备分组成功');
+      addDeviceGroup() {
+        if (this.newDeviceGroupName) {
+          let postObj = {};
+          postObj.deviceGroupName = this.newDeviceGroupName;
+          this.$store.dispatch('addDeviceGroup', postObj).then(() => {
+            this.addGroupDialog = false;
+            this.getDeviceAndStatus();
           }).catch(err => {
-            console.log('添加设备分组失败!');
+            console.log(err);
           });
         }
       },
-      //删除设备分组
       delDeviceGroup(){
-        this.delGroupDialog = false;
-        let data = {};
-        data.deviceGroupId = this.deviceGroup.deviceGroupId;
-        this.$store.dispatch('delDeviceGroup', JSON.stringify(data)).then(() => {
-          this.$store.dispatch('getDevices');
-          console.log('添加设备分组成功');
+        let postObj = {};
+        postObj.deviceGroupId = this.deviceGroup.deviceGroupId;
+        this.$store.dispatch('delDeviceGroup', postObj).then(() => {
+          this.delGroupDialog = false;
+          this.getDeviceAndStatus();
         }).catch(err => {
-          console.log('添加设备分组失败!');
+          console.log(err);
         });
-      },
-      //查看设备详细信息
-      getDeviceInfo(value, group) {
-        value.groupName = group;
-        console.log("value--------" + JSON.stringify(value));
-        this.$store.dispatch('setDeviceInfo', value);
-        this.closeDialog();
-        this.$router.push('/devices/infor');
-      },
-      //打开删除设备对话框
-      openDelDialog(deviceGroupIndex, deviceIndex) {
-        //获取到被分享的用户信息
-        this.device.deviceId = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceInformation[deviceIndex].deviceId;
-        this.device.beSharedUser = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceInformation[deviceIndex].beSharedUser;
-        this.deleteDialog = true;
-      },
-      setUserIndex(userIndex){
-        this.userIndex = userIndex;
       },
       cancelDeviceShare() {
-        this.deleteDialog = false;
-        this.friendIdList = [];
-        //将得到的数据分发给store中的取消分享的事件
         let postObj = {};
         postObj.deviceId = this.device.deviceId;
-        postObj.besharedId = this.device.beSharedUser[this.userIndex].beSharedId;
-        const data = JSON.stringify(postObj);
-        this.$store.dispatch('cancelDeviceShare', data).then(() => {
-          //删除设备后及时刷新一次
-          this.$store.dispatch('getDevices');
+        postObj.besharedId = this.beSharedId;
+        this.$store.dispatch('cancelDeviceShare',postObj).then(() => {
+          this.cancelDeviceShareDialog = false;
+          this.getDeviceAndStatus();
+        }).catch(err => {
+          console.log(err);
         })
-      },
-      getProductList() {
-        this.$store.dispatch('getProducts').then(() => {
-          this.$router.push({path: '/devices/product/list'});
-          console.log('获取产品列表成功');
-        }).catch(err => {
-          console.log('获取产品列表失败!');
-        });
-      },
-      getALLDeviceStatus() {
-        this.$store.dispatch('getALLDeviceStatus').then(() => {
-          console.log('获取设备状态成功!');
-        }).catch(err => {
-          console.log('获取设备状态失败!');
-        });
       }
-    },
-    beforeDestroy () {
-      console.log('清除定时器' + this.interval);
-      clearInterval(this.interval);
     }
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='scss' scoped>
   .title {
     text-align: left;

@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 import Login from '@/components/login'
 import Register from '@/components/register'
 import modify from '@/components/modify'
-
 import main from '@/components/main'
+
 import monitor from '@/views/monitor/monitor'
 import devices from '@/views/device/devices'
 import friends from '@/views/friend/friends'
@@ -18,8 +19,6 @@ import productInfo from '@/views/device/productInfo'
 import addMonitor from '@/views/monitor/addMonitor'
 import monitorInfo from '@/views/monitor/monitorInfo'
 import newFriends from '@/views/friend/newFriends'
-import friendInfo from '@/views/friend/friendInfo'
-
 
 import me from '@/views/user/me'
 import getpassword from '@/views/user/getpwd'
@@ -89,11 +88,6 @@ export default new Router({
               path: '/friends/newfriends',
               name: 'newFriends',
               component: newFriends
-            },
-            {
-              path: '/friends/infor',
-              name: 'friendInfo',
-              component: friendInfo
             }
           ]
         },

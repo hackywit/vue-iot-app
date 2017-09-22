@@ -49,10 +49,9 @@
         /**
          * 界面布局相关变量
          */
+        //界面选择性隐藏布局变量
         flag: false,
-        /**
-         * 界面触发事件相关变量
-         */
+        //界面事件窗口布局变量
         targetOrigin: {
           vertical: 'top',
           horizontal: 'right'
@@ -63,6 +62,9 @@
         interval: 0
       }
     },
+    /**
+     * 组件的声明周期函数
+     */
     created() {
       this.$store.state.selected = 'monitor';
       this.$store.dispatch('getAllData').then(() => {

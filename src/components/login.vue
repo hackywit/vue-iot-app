@@ -46,7 +46,7 @@
         userName: '',
         password: '',
         /**
-         * 界面展示数据相关变量
+         * 自定义变量
          */
         alertText: '',
       }
