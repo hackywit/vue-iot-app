@@ -19,7 +19,7 @@
           <mu-list-item v-for='(sub,deviceIndex) in item.deviceList' :key='sub.deviceId' :title='sub.deviceAlias'
                         :describeText="sub.deviceName" slot='nested'>
             <mu-icon-menu slot="right" icon="more_vert" tooltip="操作">
-              <mu-menu-item v-if='!sub.isSelled' title="移动分组" @click='openAllocGroup(sub.deviceId,index)'/>
+              <mu-menu-item v-if='!sub.isSelled' title="移动分组" @click='openAllocGroup(sub.deviceId,index,deviceIndex)'/>
               <mu-menu-item title="删除机器" @click='openDelDeviceDialog(index,deviceIndex)'/>
             </mu-icon-menu>
           </mu-list-item>
@@ -137,8 +137,8 @@
       /**
        * 界面路由相关函数
        */
-      gotoAddDevice(product){
-        this.$store.commit('SET_PRODUCTINFO',product);
+      gotoAddDevice(productInfo){
+        this.$store.commit('SET_PRODUCTINFO',productInfo);
         this.$router.push('/devices/adddevice');
       },
       handleClose () {
@@ -186,11 +186,11 @@
           console.log('删除设备失败!');
         });
       },
-      openAllocGroup(deviceId, index) {
+      openAllocGroup(deviceId, index, deviceIndex) {
+        this.$store.state.devices.productListIndex = index;
+        this.$store.state.devices.productDeviceListIndex = deviceIndex;
         //由于这个是求post过去的数据，所以不涉及到界面的计算属性，放在methods即可
         this.updateGroup.deviceId = deviceId;
-        //将index保存到store的device模块下
-        this.$store.state.devices.productDeviceListIndex = index;
         //开启分配设备组的窗口
         this.moveToDeviceGroupDialog = true;
       },
@@ -203,6 +203,7 @@
           this.toastMsg = '分配到设备组成功！';
           this.showToast();
         }).catch(err => {
+            console.log(err)
         });
       },
       showToast () {

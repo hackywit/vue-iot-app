@@ -12,6 +12,7 @@ const devices = {
      */
     //productList中的选中的那个产品信息
     productInfo: {},
+    productListIndex:'',
     productDeviceListIndex: '',
 
     deviceinfo: {
@@ -98,7 +99,6 @@ const devices = {
       state.productList = list;
     },
     SET_ISSEHLLED: (state, bool) => {
-      //这边要注意，不能用this.productListIndex,this是指的全局vue对象，写错就不能实现功能
       state.productList[state.productListIndex].deviceList[state.productDeviceListIndex].isSelled = bool;
     },
     UPDATE_DEVICESTATUS: (state, data) => {

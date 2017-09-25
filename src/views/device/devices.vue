@@ -80,8 +80,8 @@
     <mu-dialog :open='cancelDeviceShareDialog' title='取消设备分享' @close='closeDialog'>
       <p>确定撤销设备 {{device.deviceAlias}} 的分享?</p>
       <mu-select-field v-model="beSharedId" :labelFocusClass="['label-foucs']" label="选择你需要取消分享的用户">
-        <mu-menu-item v-for="(beSharedUser,userIndex) in device.beSharedUser" :key="userIndex"
-                      :value="beSharedUser.beSharedId" :title="beSharedUser.beSharedName"/>
+        <mu-menu-item v-for="(item,userIndex) in device.beSharedUser" :key="userIndex"
+                      :value="item.beSharedId" :title="item.beSharedName"/>
       </mu-select-field>
       <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
       <mu-flat-button slot='actions' @click='cancelDeviceShare' primary label='确定'/>
@@ -198,6 +198,7 @@
       openCancelDeviceShareDialog(deviceGroupIndex, deviceIndex) {
         this.device.deviceId = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceInformation[deviceIndex].deviceId;
         this.device.beSharedUser = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceInformation[deviceIndex].beSharedUser;
+        console.log(JSON.stringify(this.device.beSharedUser));
         this.device.deviceAlias = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceInformation[deviceIndex].deviceAlias;
         this.cancelDeviceShareDialog = true;
       },
