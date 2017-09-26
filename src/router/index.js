@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import app from '@/App'
+import main from '@/views/main'
 
 import monitor from '@/views/monitor/monitor'
 import devices from '@/views/device/devices'
@@ -42,11 +42,11 @@ export default new Router({
     },
     {
       path: '/main',
-      component: app,
+      component: main,
       children: [
         {
           path: '/main',
-          component: app
+          component: main
         },
         {
           path: '/monitor',

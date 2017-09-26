@@ -3,17 +3,17 @@
     <div class="main">
       <router-view></router-view>
     </div>
-    <Navbar></Navbar>
+    <!--<Navbar></Navbar>-->
   </div>
 </template>
 
 <script>
-  import Navbar from '@/views/components/tabbar'
+//  import Navbar from '@/views/components/tabbar'
   export default {
     name: 'app',
-    components: {
-      Navbar
-    }
+//    components: {
+//      Navbar
+//    }
   }
 </script>
 
