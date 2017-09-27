@@ -238,8 +238,8 @@
       /*界面内的数据交互*/
       getDeviceAndStatus() {
         this.$store.dispatch('getDevices').then(() => {
-          this.flag = true;//如果获取状态失败也显示
           this.$store.dispatch('getALLDeviceStatus').then(() => {
+            this.flag = true;//如果获取状态失败也显示
           }).catch(err => {
             console.log(err);
           });
@@ -308,7 +308,7 @@
         let postObj = {};
         postObj.deviceId = this.device.deviceId;
         postObj.besharedId = this.beSharedId;
-        this.$store.dispatch('cancelDeviceShare',postObj).then(() => {
+        this.$store.dispatch('cancelDeviceShare', postObj).then(() => {
           this.cancelDeviceShareDialog = false;
           this.getDeviceAndStatus();
         }).catch(err => {
