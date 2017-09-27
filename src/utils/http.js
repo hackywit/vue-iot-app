@@ -6,7 +6,7 @@ import axios from 'axios'
 
 // axios 配置
 axios.defaults.timeout = 5000;
-//这边不能写在配置文件中，打包的时候会忽略
+// 这边不能写在配置文件中，打包的时候会忽略
 // axios.defaults.baseURL = "http://47.93.224.34:8000";
 axios.defaults.baseURL = "http://127.0.0.1:80";
 // axios.defaults.baseURL = process.env.BASE_API;
@@ -22,7 +22,8 @@ axios.interceptors.request.use(
   },
   error => {
     return Promise.reject(error);
-  });
+  }
+);
 
 // http response 拦截器
 axios.interceptors.response.use(
@@ -31,6 +32,7 @@ axios.interceptors.response.use(
   },
   error => {
     return Promise.reject(error.response.data)
-  });
+  }
+);
 
 export default axios;

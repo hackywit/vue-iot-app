@@ -179,11 +179,11 @@
         this.delDeviceDialog = false;
         this.$store.dispatch('deleteDevice', this.device.deviceId).then(() => {
           this.$store.dispatch('getProducts');
-          console.log('删除设备成功');
           this.toastMsg = '删除设备成功！';
           this.showToast();
         }).catch(err => {
-          console.log('删除设备失败!');
+          this.toastMsg = err.message;
+          this.showToast();
         });
       },
       openAllocGroup(deviceId, index, deviceIndex) {
@@ -215,7 +215,7 @@
       },
       hideToast () {
         this.toastFlag = false;
-        if (this.toastTimer) clearTimeout(this.toastTimer)
+        if (this.toastTimer) clearTimeout(this.toastTimer);
       }
     }
   }
