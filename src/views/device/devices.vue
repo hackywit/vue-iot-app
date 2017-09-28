@@ -86,6 +86,7 @@
       <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
       <mu-flat-button slot='actions' @click='cancelDeviceShare' primary label='确定'/>
     </mu-dialog>
+    <mu-toast v-if="toastFlag" :message="toastMsg" @close="hideToast"/>
     <transition name='router-show'>
       <router-view></router-view>
     </transition>
@@ -102,6 +103,7 @@
         //界面选择性展示相关变量
         isShow: false,
         flag: false,
+        toastFlag: false,
         //界面弹出窗口相关变量
         openDialog: false,
         delGroupDialog: false,
@@ -131,6 +133,7 @@
         /**
          * 自定义变量
          */
+        toastMsg: '',
         friendIdList: [],
         //与store交互有关变量
         deviceGroup: {
@@ -172,6 +175,19 @@
       /**
        * 界面布局相关函数
        */
+      /*界面提示窗口函数*/
+      showToast (toastMsg) {
+        this.toastMsg = toastMsg;
+        this.toastFlag = true;
+        if (this.toastTimer) clearTimeout(this.toastTimer);
+        this.toastTimer = setTimeout(() => {
+          this.toastFlag = false;
+        }, 2000)
+      },
+      hideToast () {
+        this.toastFlag = false;
+        if (this.toastTimer) clearTimeout(this.toastTimer);
+      },
       /*界面弹出窗口布局函数，弹出之前需要对窗口要用到的数据进行初始化*/
       openAddGroupDialog () {
         this.openDialog = false;
@@ -261,7 +277,11 @@
         });
         this.$store.dispatch('shareDeviceGroup', postObj).then(() => {
           this.shareDeviceGroupDialog = false;
+          this.showToast('分享设备组成功');
           this.getDeviceAndStatus();
+        }).catch(err => {
+          this.showToast(err.message);
+          console.log(err);
         });
       },
       shareDevice(){
@@ -279,7 +299,12 @@
         });
         this.$store.dispatch('shareDevice', postObj).then(() => {
           this.shareDeviceDialog = false;
+          this.showToast('分享设备成功');
           this.getDeviceAndStatus();
+        }).catch(err => {
+          this.shareDeviceDialog = false;
+          this.showToast(err.message);
+          console.log(err);
         });
       },
       addDeviceGroup() {
@@ -288,8 +313,10 @@
           postObj.deviceGroupName = this.newDeviceGroupName;
           this.$store.dispatch('addDeviceGroup', postObj).then(() => {
             this.addGroupDialog = false;
+            this.showToast('添加设备组成功');
             this.getDeviceAndStatus();
           }).catch(err => {
+            this.showToast(err.message);
             console.log(err);
           });
         }
@@ -299,8 +326,10 @@
         postObj.deviceGroupId = this.deviceGroup.deviceGroupId;
         this.$store.dispatch('delDeviceGroup', postObj).then(() => {
           this.delGroupDialog = false;
+          this.showToast('删除设备组成功');
           this.getDeviceAndStatus();
         }).catch(err => {
+          this.showToast(err.message);
           console.log(err);
         });
       },
@@ -310,8 +339,10 @@
         postObj.besharedId = this.beSharedId;
         this.$store.dispatch('cancelDeviceShare', postObj).then(() => {
           this.cancelDeviceShareDialog = false;
+          this.showToast('取消设备分享成功');
           this.getDeviceAndStatus();
         }).catch(err => {
+          this.showToast(err.message);
           console.log(err);
         })
       }

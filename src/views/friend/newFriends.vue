@@ -29,6 +29,7 @@
         </mu-list-item>
       </div>
     </div>
+    <mu-toast v-if="toastFlag" :message="toastMsg" @close="hideToast"/>
   </div>
 </template>
 
@@ -37,6 +38,7 @@
   export default {
     data () {
       return {
+        toastFlag: '',
         activeTab: 'requestFriendTab'
       }
     },
@@ -52,14 +54,35 @@
       }
     },
     methods: {
+      /**
+       * 界面布局相关函数
+       */
+      /*界面提示窗口函数*/
+      showToast (toastMsg) {
+        this.toastMsg = toastMsg;
+        this.toastFlag = true;
+        if (this.toastTimer) clearTimeout(this.toastTimer);
+        this.toastTimer = setTimeout(() => {
+          this.toastFlag = false;
+        }, 2000)
+      },
+      hideToast () {
+        this.toastFlag = false;
+        if (this.toastTimer) clearTimeout(this.toastTimer);
+      },
       handleTabChange(val) {
         this.activeTab = val;
       },
       receiveFriend(name, type) {
         let data = '{ "userName": "' + name + '", "userType": "' + type + ' "}';
         this.$store.dispatch('receiveFriend', data).then(() => {
+          this.$store.dispatch('getUnreceivedList').then(() => {
+            this.showToast('添加好友成功')
+          }).catch(err => {
+            this.showToast(err.message);
+            console.log(err);
+          });
           this.$store.dispatch('getFriends');
-          this.$store.dispatch('getUnreceivedList');
         }).catch(err => {
           console.log(err);
         })
@@ -92,9 +115,11 @@
       }
     }
   }
+
   .mu-tab-link {
     color: #000;
   }
+
   .mu-tab-active {
     color: #2196f3;
   }

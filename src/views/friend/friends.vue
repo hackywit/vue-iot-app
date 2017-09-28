@@ -63,6 +63,7 @@
       <mu-flat-button slot='actions' @click='closeAllDialog' primary label='取消'/>
       <mu-flat-button slot='actions' @click='moveFriend' primary label='确定'/>
     </mu-dialog>
+    <mu-toast v-if="toastFlag" :message="toastMsg" @close="hideToast"/>
     <transition name='router-show'>
       <router-view></router-view>
     </transition>
@@ -77,13 +78,15 @@
         /**
          * 界面布局相关变量
          */
-        //弹出框布局变量
+        /*界面选择性展示相关变量*/
+        toastFlag: '',
+        /*弹出框布局变量*/
         showAddGroup: false,
         showAddFriend: false,
         delFriendGroupDialog: false,
         moveFriendDialog: false,
         delFriendDialog: false,
-        //界面事件窗口布局变量
+        /*界面事件窗口布局变量*/
         openMenu: false,
         trigger: null,
         anchorOrigin: {
@@ -107,6 +110,8 @@
         /**
          * 自定义临时变量
          */
+        /*界面消息提示*/
+        toastMsg: '',
         //保存选中组的好友组信息
         friendGroup: {
           friendGroupName: '',
@@ -138,6 +143,19 @@
       /**
        * 界面布局相关函数
        */
+      /*界面提示窗口函数*/
+      showToast (toastMsg) {
+        this.toastMsg = toastMsg;
+        this.toastFlag = true;
+        if (this.toastTimer) clearTimeout(this.toastTimer);
+        this.toastTimer = setTimeout(() => {
+          this.toastFlag = false;
+        }, 2000)
+      },
+      hideToast () {
+        this.toastFlag = false;
+        if (this.toastTimer) clearTimeout(this.toastTimer);
+      },
       /*界面弹出窗口布局函数，打开之前对对话框需要用到的数据预赋值*/
       openAddGroupDialog () {
         this.addGroupName = '';
@@ -198,8 +216,10 @@
           postObj.friendGroupName = this.addGroupName;
           this.$store.dispatch('addFriendGroup', postObj).then(() => {
             this.showAddGroup = false;
+            this.showToast('添加好友分组成功');
             this.$store.dispatch('getFriends')
           }).catch(err => {
+            this.showToast(err.message);
             console.log(err);
           });
         }
@@ -210,8 +230,10 @@
         postObj.userType = this.userType;
         this.$store.dispatch('addFriend', postObj).then(() => {
           this.showAddFriend = false;
+          this.showToast('发送好友请求成功');
           this.$store.dispatch('getFriends');
         }).catch(err => {
+          this.showToast(err.message);
           console.log(err);
         });
       },
@@ -222,7 +244,11 @@
         postObj.bemoveGroupName = this.friendgroup.friendGroupName;
         this.$store.dispatch('updateFriendGroup', postObj).then(() => {
           this.moveFriendDialog = false;
+          this.showToast('移动好友成功');
           this.$store.dispatch('getFriends');
+        }).catch(err => {
+          this.showToast(err.message);
+          console.log(err);
         });
       },
       delFriend(){
@@ -231,7 +257,11 @@
         postObj.friendType = this.friendInfo.userType;
         this.$store.dispatch('deleteFriend', postObj).then(() => {
           this.delFriendDialog = false;
+          this.showToast('删除好友成功');
           this.$store.dispatch('getFriends');
+        }).catch(err => {
+          this.showToast(err.message);
+          console.log(err);
         });
       },
       delFriendGroup(){
@@ -239,8 +269,10 @@
         postObj.friendGroupId = this.friendGroup.friendGroupId;
         this.$store.dispatch('delFriendGroup', postObj).then(() => {
           this.delFriendGroupDialog = false;
+          this.showToast('删除好友组成功');
           this.$store.dispatch('getFriends');
         }).catch(err => {
+          this.showToast(err.message);
           console.log(err);
         });
       }
