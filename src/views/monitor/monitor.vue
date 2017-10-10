@@ -69,6 +69,9 @@
       this.$store.state.selected = 'monitor';
       this.$store.dispatch('getAllData').then(() => {
         this.flag = true;
+        this.interval = setInterval(() => {
+          this.$store.dispatch('getAllData');
+        }, 1000);
       });
     },
     beforeDestroy () {
@@ -84,7 +87,7 @@
     filters: {
       //过滤函数，对每个时间戳进行处理
       time: function (timestamp) {
-        return new Date(parseInt(timestamp) * 1000).toLocaleString().substr(0, 17)
+        return new Date(parseInt(timestamp) * 1000).toLocaleString().substr(0, 19)
       }
     },
     methods: {

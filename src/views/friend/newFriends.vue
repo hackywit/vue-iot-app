@@ -1,6 +1,5 @@
 <template>
   <div class="new-friends">
-    <!--header-->
     <mu-appbar title='新的好友' class='header'>
       <mu-icon-button icon='keyboard_arrow_left' style='color: #fff' slot="left" @click="this.history.back()"/>
     </mu-appbar>
@@ -25,7 +24,7 @@
           <mu-icon slot="left" value="person"/>
           <span slot='describe'>
         				<span slot='left'>添加<span> {{sub.friendName}} </span>为好友, 等待对方确认</span>
-        			</span>
+          </span>
         </mu-list-item>
       </div>
     </div>
