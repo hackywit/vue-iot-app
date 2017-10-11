@@ -39,6 +39,7 @@
           monitorName: '',
           monitorData: '',
           version: '',
+          index:''
         }
       }
     },
@@ -54,9 +55,11 @@
         postObj.shadowVersion = this.monitorInfo.version + 1;//要更新版本必须大于原来的版本
         postObj.updataMessage = {};
         let obj = {};
-        obj[this.monitorInfo.monitorName]= this.monitorInfo.monitorData;
+        obj[this.monitorInfo.monitorName] = this.monitorInfo.monitorData;
         postObj.updataMessage = obj;
-        this.$store.dispatch('deviceUpdateData',JSON.stringify(postObj)).then(() => {
+        this.$store.dispatch('deviceUpdateData', JSON.stringify(postObj)).then(() => {
+          //反控成功的话需要将version加1,更改版本号
+          this.$store.state.monitors.monitorData[this.monitorInfo.index].version += 1;
           this.$router.push('/monitor');
         })
       }

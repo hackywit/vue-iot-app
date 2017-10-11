@@ -13,7 +13,7 @@
       <div id='sortable' v-show="flag">
         <div v-for='(device,index) in monitorData' :key='index'>
           <mu-flexbox class='flex-box'>
-            <span class="monitor-dev">产品: {{ device.productName }}</span>
+            <span class="monitor-dev">产品: {{ device.productName }}</span>&nbsp;---&nbsp;
             <span class="monitor-dev">设备: {{ device.deviceAlias }}</span>
           </mu-flexbox>
           <mu-flexbox class='flex-box' v-for='(value, key) in device.state.reported' :key='key'>
@@ -103,8 +103,10 @@
         postObj.version = this.$store.state.monitors.monitorData[index].version;
         postObj.monitorName = key;
         postObj.monitorData = value;
+        postObj.index = index;
         this.$store.commit('SET_MONITORINFO', postObj);
         this.$router.push('/monitor/infor');
+        clearInterval(this.interval);
       }
     },
   }
@@ -155,14 +157,16 @@
           height: 30px;
           line-height: 30px;
         }
-        .monitor-dev {
-          display: block;
-          height: 30px;
-          line-height: 30px;
-        }
       }
       .flex-item-time {
         text-align: center;
+      }
+      .monitor-dev {
+        display: block;
+        height: 30px;
+        line-height: 30px;
+        margin-left: 10px;
+        margin-right: 10px;
       }
     }
   }
