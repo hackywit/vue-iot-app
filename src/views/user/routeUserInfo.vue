@@ -135,10 +135,11 @@
        */
       //更改密码
       updatePassword() {
-        let data = '{"userName": "' + this.userinfo.userName +
-          '", "userType": "' + this.userinfo.userType +
-          '", "password": "' + this.newMsg + '"}';
-        this.$store.dispatch('updatePassword', data).then(() => {
+        let postObj = {};
+        postObj.userName = this.userinfo.userName;
+        postObj.userType = this.userinfo.userType;
+        postObj.password = this.textMsg;
+        this.$store.dispatch('updatePassword', postObj).then(() => {
           console.log('修改密码成功');
           this.tipDialog = true;
         }).catch(err => {

@@ -90,9 +90,9 @@ const user = {
 				})
 			})
 		},
-		updatePassword({commit}, info) {
+		updatePassword({commit}, data) {
 			return new Promise((resolve, reject) => {
-				updatePassword(info).then(response => {
+				updatePassword(JSON.stringify(data)).then(response => {
 					const data = response.data;
 					console.log(data);
 					resolve();
