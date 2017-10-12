@@ -99,6 +99,7 @@
         postObj.userType = this.userinfo.userType;
         postObj.password = this.userinfo.password;
         this.$store.dispatch('updatePassword', JSON.stringify(postObj)).then(() => {
+          this.resetPwdDialog = false;
           console.log("更改密码成功");
           this.$router.push("/");
         }).catch(err => {
