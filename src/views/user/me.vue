@@ -67,7 +67,7 @@
         this.bottomSheetFlag = false;
       },
       openBottomSheet() {
-        this.open = true;
+        this.bottomSheetFlag = true;
       },
       /**
        * 路由相关函数
