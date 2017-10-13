@@ -18,6 +18,15 @@ export function login(data) {
 	});
 }
 
+//判断用户是否存在
+export function isUserExist(data){
+  return axios({
+    url: '/v1/isUserExist',
+    method: 'post',
+    data
+  })
+}
+
 //获取用户信息
 export function getUserinfo() {
 	return axios({
@@ -38,6 +47,14 @@ export function updatePassword(data) {
 export function forgetPassword(data) {
   return axios({
     url: '/v1/forget_password',
+    method: 'post',
+    data
+  })
+}
+
+export function regist_verify(data) {
+  return axios({
+    url: '/v1/regist_verify',
     method: 'post',
     data
   })

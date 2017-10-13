@@ -33,7 +33,12 @@
     <br/><br/><br/>
     <mu-dialog :open="alertDialog" v-if="alertDialog" :showHide="alertDialog" title="提示">
       <p>{{ alertText }}</p>
-      <mu-flat-button label="确定" slot="actions" primary @click="closeAlert"/>
+      <mu-flat-button label="确定" slot="actions" primary @click="closeDialog"/>
+    </mu-dialog>
+    <mu-dialog :open='verifyTelDialog'>
+      <mu-text-field label="验证码" hintText="请输入验证码" v-model="verificationCode"></mu-text-field>
+      <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
+      <mu-flat-button slot='actions' @click='verifyTel' primary label='确定'/>
     </mu-dialog>
   </div>
 </template>
@@ -49,6 +54,7 @@
          * 界面布局相关变量
          */
         alertDialog: false,
+        verifyTelDialog: false,
         /**
          * v-model相关变量
          */
@@ -69,7 +75,8 @@
         //自定义的展示变量
         alertText: '',
         countryList: ['中国'],
-        provinceList: []
+        provinceList: [],
+        verificationCode: ''
       }
     },
     created(){
@@ -82,8 +89,9 @@
       /**
        * 窗口的打开和关闭
        */
-      closeAlert() {
+      closeDialog() {
         this.alertDialog = false;
+        this.verifyTelDialog = false;
       },
       /**
        * 与store的数据交互
@@ -94,20 +102,49 @@
           this.alertDialog = true;
           return;
         }
-        this.$store.dispatch('userRegister', this.userinfo).then(() => {
-          this.$router.go(-1);
+        //先要判断用户名是否已经被注册了
+        let postObj = {};
+        postObj.userType = this.userinfo.userType;
+        postObj.userName = this.userinfo.userName;
+        this.$store.dispatch('isUserExist', postObj).then(() => {
+          //当用户名不存在的时候继续,验证手机号是否正确
+          let postObj = {};
+          postObj.tel = this.userinfo.tel;
+          this.$store.dispatch('regist_verify', postObj).then(() => {
+            this.verifyTelDialog = true;
+          }).catch(err => {
+            this.alertDialog = true;
+            this.alertText = this.$store.state.user.error.errorMessage;
+          });
         }).catch(err => {
-          this.alertDialog = true;
           this.alertText = this.$store.state.user.error.errorMessage;
+          this.alertDialog = true;
         });
+      },
+      verifyTel(){
+        //判断输入的验证码是否正确
+        let userInputCode = this.verificationCode;
+        let serviceBackCode = this.$store.state.user.verificationCode;
+        if (userInputCode === serviceBackCode && userInputCode !== '' && serviceBackCode !== '') {
+          this.$store.dispatch('userRegister', this.userinfo).then(() => {
+            this.$router.go(-1);
+          }).catch(err => {
+            this.alertDialog = true;
+            this.alertText = this.$store.state.user.error.errorMessage;
+          });
+        }
       },
       /**
        * 本地工具函数，减少单个函数的代码量
        */
       checkUserInput() {
-        if (!checkUserName(this.userinfo.userName)) {
-          this.alertText = '请输入正确的用户名';
-          return;
+//        if (!checkUserName(this.userinfo.userName)) {
+//          this.alertText = '请输入正确的用户名';
+//          return;
+//        }
+        if (this.userinfo.userName.length === 0) {
+          this.alertText = '用户名不能为空';
+          return
         }
         if (this.userinfo.password.length < 6) {
           this.alertText = '密码不能小于6位';

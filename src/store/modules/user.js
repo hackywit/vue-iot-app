@@ -1,4 +1,4 @@
-import { login, register, getUserinfo, updatePassword,forgetPassword,changeUserInfo } from '@/api/user';
+import { login,isUserExist, register, getUserinfo, updatePassword,forgetPassword,regist_verify,changeUserInfo } from '@/api/user';
 import Cookies from 'js-cookie';
 
 const user = {
@@ -55,6 +55,20 @@ const user = {
 				})
 			})
 		},
+    //判断用户是否存在
+    isUserExist({ commit }, data) {
+      return new Promise((resolve, reject) => {
+        isUserExist(JSON.stringify(data)).then(response => {
+          resolve();
+        }).catch(error => {
+          let errorInfor = {};
+          errorInfor.errorNumber = error.code;
+          errorInfor.errorMessage = error.message;
+          commit('SET_ERROR', errorInfor);
+          reject(error);
+        })
+      })
+    },
 		//用户登录
 		login({ commit }, data) {
 			return new Promise((resolve, reject) => {
@@ -105,6 +119,21 @@ const user = {
     forgetPassword({commit}, data){
       return new Promise((resolve, reject) => {
         forgetPassword(data).then(response => {
+          const data = response.data.message;
+          commit('SET_VERIFICATIONCODE',data);
+          resolve();
+        }).catch(error => {
+          let errorInfor = {};
+          errorInfor.errorNumber = error.code;
+          errorInfor.errorMessage = error.message;
+          commit('SET_ERROR', errorInfor);
+          reject(error);
+        })
+      })
+    },
+    regist_verify({commit}, data){
+      return new Promise((resolve, reject) => {
+        regist_verify(data).then(response => {
           const data = response.data.message;
           commit('SET_VERIFICATIONCODE',data);
           resolve();
