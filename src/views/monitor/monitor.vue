@@ -67,14 +67,16 @@
      */
     created() {
       this.$store.state.selected = 'monitor';
+    },
+    beforeMount(){
       this.$store.dispatch('getAllData').then(() => {
         this.flag = true;
         this.interval = setInterval(() => {
           this.$store.dispatch('getAllData');
-        }, 500);
+        }, 1000);
       });
     },
-    beforeDestroy () {
+    beforeDestroy() {
       console.log('清除定时器' + this.interval);
       clearInterval(this.interval);
     },
@@ -106,7 +108,6 @@
         postObj.index = index;
         this.$store.commit('SET_MONITORINFO', postObj);
         this.$router.push('/monitor/infor');
-        clearInterval(this.interval);
       }
     },
   }
