@@ -293,7 +293,6 @@ const devices = {
               })
             })
           });
-          console.log(JSON.stringify(deviceLists));
           commit('SET_DEVICELIST', deviceLists);
           resolve();
         }).catch(error => {
