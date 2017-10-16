@@ -20,12 +20,13 @@
           <mu-menu-item title="分享设备组" @click='openShareDeviceGroupDialog(deviceGroupIndex)'/>
           <mu-menu-item title="删除设备组" @click='openDeleteGroupDialog(deviceGroupIndex)'/>
         </mu-icon-menu>
+        <span slot='left'>测试：{{JSON.stringify(deviceLists)}}</span><br/>
         <mu-list-item v-for='(sub,deviceIndex) in item.deviceInformation' :key='sub.deviceAlias'
                       :title='sub.deviceAlias'
                       slot='nested' class='titleStyle'>
-          <mu-icon v-if="sub.status == 'ONLINE'" slot="left" value="cloud_done" :size='35' color='green'/>
-          <mu-icon v-else-if="sub.status == 'OFFLINE'" slot="left" value="cloud_off" :size='35' color='red'/>
-          <mu-icon v-else slot="left" value="cloud_circle" :size='40'/>
+          <mu-icon v-show="sub.status == 'ONLINE'" slot="left" value="cloud_done" :size='35' color='green'/>
+          <mu-icon v-show="sub.status == 'OFFLINE'" slot="left" value="cloud_off" :size='35' color='red'/>
+          <mu-icon v-show="sub.status == 'UNACTIVE'" slot="left" value="cloud_circle" :size='40'/>
           <span slot='describe'>
         				<span slot='left'>设备序列号：{{sub.deviceName}}</span><br/>
         				<span slot='right'>设备Id：{{sub.deviceId}}</span>
@@ -166,10 +167,19 @@
     mounted () {
       this.trigger = this.$refs.button.$el;//触发添加按钮dom
     },
+    beforeMount(){
+      this.interval = setInterval(() => {
+        this.$store.dispatch('getALLDeviceStatus');
+      }, 1000)
+    },
+    beforeDestroy() {
+      console.log('清除定时器' + this.interval);
+      clearInterval(this.interval);
+    },
     computed: {
       deviceLists() {
         return this.$store.state.devices.deviceLists;
-      }
+      },
     },
     methods: {
       /**

@@ -4,6 +4,7 @@ import {
   getProducts, addProduct, updateProduct, deleteProduct,
   getDeviceStatus, getALLDeviceStatus, deleteDevice, cancelDeviceShare, delDeviceGroup
 } from '@/api/device';
+import rootState from "../index";
 
 const devices = {
   state: {
@@ -12,7 +13,7 @@ const devices = {
      */
     //productList中的选中的那个产品信息
     productInfo: {},
-    productListIndex:'',
+    productListIndex: '',
     productDeviceListIndex: '',
 
     deviceinfo: {
@@ -84,7 +85,7 @@ const devices = {
      * 界面传值用到函数
      */
     SET_PRODUCTINFO: (state, data) => {
-       state.productInfo = data;
+      state.productInfo = data;
     },
     SET_DEVICEINFO: (state, info) => {
       state.deviceinfo = info;
@@ -101,20 +102,8 @@ const devices = {
     SET_ISSEHLLED: (state, bool) => {
       state.productList[state.productListIndex].deviceList[state.productDeviceListIndex].isSelled = bool;
     },
-    UPDATE_DEVICESTATUS: (state, data) => {
-      data.forEach((deviceStatus) => {
-        state.deviceLists.forEach((deviceList) => {
-          deviceList.deviceInformation.forEach((deviceInformation) => {
-            if (deviceInformation.deviceId === deviceStatus.deviceId) {
-              deviceInformation.status = deviceStatus.status;
-            }
-          })
-        })
-      });
-    },
     ADD_DEVICESTATUS: (state, status) => {
       state.deviceinfo = {...state.deviceinfo, status: status};
-      console.log(state.deviceinfo);
     }
   },
 
@@ -170,6 +159,11 @@ const devices = {
       return new Promise((resolve, reject) => {
         getDevices().then(response => {
           const data = response.data.deviceLists;
+          data.forEach((deviceList) => {
+            deviceList.deviceInformation.forEach((deviceInformation) => {
+              deviceInformation.status = ''//如果要之后的变量能被检测到,一开始就要写进去,并且以后commit的都必须为最大范围的那个变量,不能是自变量提交
+            })
+          });
           commit('SET_DEVICELIST', data);
           resolve();
         }).catch(error => {
@@ -275,11 +269,8 @@ const devices = {
       console.log(key);
       return new Promise((resolve, reject) => {
         const addData = '{ "productKey": "' + key + '"}';
-        console.log(addData);
         deleteProduct(addData).then(response => {
-          console.log(response);
           const data = response.data;
-          console.log(data);
           resolve();
         }).catch(error => {
           console.log(error);
@@ -291,7 +282,19 @@ const devices = {
       return new Promise((resolve, reject) => {
         getALLDeviceStatus().then(response => {
           const data = response.data.deviceStatusList;
-          commit('UPDATE_DEVICESTATUS', data);
+          //这边我们需要先拼凑出需要commit的deviceLists
+          const deviceLists = rootState.state.devices.deviceLists;
+          data.forEach((deviceStatus) => {
+            deviceLists.forEach((deviceList) => {
+              deviceList.deviceInformation.forEach((deviceInformation) => {
+                if (deviceInformation.deviceId === deviceStatus.deviceId) {
+                  deviceInformation.status = deviceStatus.status;
+                }
+              })
+            })
+          });
+          console.log(JSON.stringify(deviceLists));
+          commit('SET_DEVICELIST', deviceLists);
           resolve();
         }).catch(error => {
           console.log(error);

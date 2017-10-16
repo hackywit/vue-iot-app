@@ -43,7 +43,6 @@ const monitors = {
 			return new Promise((resolve, reject) => {
 				getAllData().then(response => {
 					const data = response.data.deviceList;
-          console.log(data);
 					commit('SET_MONITORDATA', data);
 					resolve();
 				}).catch(error => {
