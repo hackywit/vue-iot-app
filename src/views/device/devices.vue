@@ -20,7 +20,6 @@
           <mu-menu-item title="分享设备组" @click='openShareDeviceGroupDialog(deviceGroupIndex)'/>
           <mu-menu-item title="删除设备组" @click='openDeleteGroupDialog(deviceGroupIndex)'/>
         </mu-icon-menu>
-        <span slot='left'>测试：{{JSON.stringify(deviceLists)}}</span><br/>
         <mu-list-item v-for='(sub,deviceIndex) in item.deviceInformation' :key='sub.deviceAlias'
                       :title='sub.deviceAlias'
                       slot='nested' class='titleStyle'>
