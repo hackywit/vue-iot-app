@@ -12,6 +12,8 @@
   "dependencies": {
     "axios": "^0.16.2",
     "babel-runtime": "^6.23.0",
+    "echarts": "^3.7.2",
+    "element-ui": "^1.4.7",
     "js-cookie": "^2.1.4",
     "mockjs": "^1.0.1-beta3",
     "muse-ui": "^2.1.0",

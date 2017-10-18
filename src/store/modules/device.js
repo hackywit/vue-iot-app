@@ -1,5 +1,5 @@
 import {
-  addDevice, getDevices, shareDevice, getDeviceData, shareDeviceGroup,
+  addDevice, getDevices, shareDevice, getDeviceDate, shareDeviceGroup,
   addDeviceGroup, getDeviceGroup, updateDeviceGroup,
   getProducts, addProduct, updateProduct, deleteProduct,
   getDeviceStatus, getALLDeviceStatus, deleteDevice, cancelDeviceShare, delDeviceGroup
@@ -78,7 +78,7 @@ const devices = {
         ]
       }
     ],
-    deviceData: {},
+    deviceDate: {},
   },
   mutations: {
     /**
@@ -90,8 +90,8 @@ const devices = {
     SET_DEVICEINFO: (state, info) => {
       state.deviceinfo = info;
     },
-    SET_DEVICEDATA: (state, data) => {
-      state.deviceData = data;
+    SET_DEVICEDATE: (state, data) => {
+      state.deviceDate = data;
     },
     SET_DEVICELIST: (state, list) => {
       state.deviceLists = list;
@@ -190,13 +190,11 @@ const devices = {
         })
       })
     },
-    getDeviceData({commit}, info) {
+    getDeviceDate({commit}, data) {
       return new Promise((resolve, reject) => {
-        const addData = '{ "productKey": "' + info.productKey + '", "deviceName": "' + info.deviceName + '}';
-        getDeviceData(addData).then(response => {
-          console.log(response);
+        getDeviceDate(JSON.stringify(data)).then(response => {
           const data = response.data;
-          commit('SET_DEVICEDATA', data);
+          commit('SET_DEVICEDATE', data);
           resolve();
         }).catch(error => {
           console.log(error);

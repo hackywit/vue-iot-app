@@ -35,7 +35,7 @@ export function shareDeviceGroup(data) {
 	})
 }
 //获取设备数据
-export function getDeviceData(data) {
+export function getDeviceDate(data) {
 	return axios({
 		url: '/v1/device_data',
 		method: 'post',

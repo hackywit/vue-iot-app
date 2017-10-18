@@ -36,9 +36,10 @@
         				<span slot='right'>状态：{{sub.status}}</span>
         			</span>
           <mu-icon-menu slot="right" icon="menu" tooltip="操作">
-            <mu-menu-item title="查看" @click='gotoDeviceInfo(sub, item.deviceGroupName)'/>
-            <mu-menu-item title="分享" @click='openShareDeviceDialog(deviceGroupIndex,deviceIndex)'/>
+            <mu-menu-item title="设备详情" @click='gotoDeviceInfo(sub, item.deviceGroupName)'/>
+            <mu-menu-item title="分享设备" @click='openShareDeviceDialog(deviceGroupIndex,deviceIndex)'/>
             <mu-menu-item title="取消分享" @click='openCancelDeviceShareDialog(deviceGroupIndex,deviceIndex)'/>
+            <mu-menu-item title="历史数据" @click='gotoHistoryInfo(sub)'/>
           </mu-icon-menu>
         </mu-list-item>
       </mu-list-item>
@@ -255,6 +256,11 @@
           this.$router.push('/devices/product/list');
         }).catch(err => {
           console.log(err);
+        });
+      },
+      gotoHistoryInfo(deviceInfo){
+        this.$store.dispatch('setDeviceInfo', deviceInfo).then(() => {
+          this.$router.push('/devices/history');
         });
       },
       /**

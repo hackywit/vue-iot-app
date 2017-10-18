@@ -8,12 +8,15 @@ import store from './store'
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
 import 'muse-ui/dist/theme-light.css'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-default/index.css'
 
 import './mock/index.js';  // 该项目所有请求使用mockjs模拟
 
 Vue.config.productionTip = false;
 //注册VueRouter这个插件
 //Vue.use(VueRouter)
+Vue.use(ElementUI);
 //注册MuseUI
 Vue.use(MuseUI);
 

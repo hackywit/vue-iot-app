@@ -12,6 +12,7 @@ import addDevice from '@/views/device/addDevice'
 import deviceInfo from '@/views/device/deviceInfo'
 import productList from '@/views/device/productList'
 import productInfo from '@/views/device/productInfo'
+import deviceHistory from '@/views/device/deviceHistory'
 
 import addMonitor from '@/views/monitor/addMonitor'
 import monitorInfo from '@/views/monitor/monitorInfo'
@@ -77,6 +78,11 @@ export default new Router({
               path: '/devices/infor',
               name: 'deviceInfo',
               component: deviceInfo
+            },
+            {
+              path: '/devices/history',
+              name: 'deviceHistory',
+              component: deviceHistory
             }
           ]
         },
