@@ -20,6 +20,7 @@
   import echarts from 'echarts';
   let xData = [];//存放表的时间
   let yData = [];//存放表的数值
+  let subtext = '';
   export default{
     data(){
       return {
@@ -56,7 +57,14 @@
 //        xData.push(new Date(parseInt(this.deviceDate.timestamp) * 1000).toLocaleString().substr(0, 24));
           xData.push(new Date().toLocaleTimeString());
           yData.push(this.deviceDate.state.reported[this.attribute]);
+          subtext = this.attribute;
           myChart.setOption({
+            title: {
+              subtext: subtext,
+            },
+            tooltip: {
+              trigger: 'axis'
+            },
             xAxis: {
               data: xData
             },
@@ -82,11 +90,29 @@
       //由于里面有在动态变化的数据,所以只能放在计算属性里面
       optionConfig() {
         return {
-          title: {text: '设备数据实时监控'},
+          title: {
+            text: '设备数据实时监控',
+            subtext: subtext,
+          },
           xAxis: {
             data: xData
           },
           yAxis: {},
+          dataZoom: [
+            {
+              type: 'slider',
+              show: true,
+              xAxisIndex: [0],
+              start: 1,
+              end: 100
+            },
+            {
+              type: 'inside',
+              xAxisIndex: [0],
+              start: 1,
+              end: 100
+            }
+          ],
           series: [{
             type: 'line',
             smooth: true,
