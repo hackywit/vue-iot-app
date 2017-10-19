@@ -6,7 +6,7 @@
     <div class="bottom">
       <div class="choose-attr">
         <el-select v-model="attribute" placeholder="选择需要监控的属性" @change="selectAttributeChange">
-          <el-option v-for="(value,key,index) in deviceDate.state.reported" :key="index" :label="key" :value="key">
+          <el-option v-for="(value,key) in deviceDate.state.reported" :key="key" :label="key" :value="key">
           </el-option>
         </el-select>
       </div>
@@ -37,39 +37,37 @@
     created() {
       /*相关变量初始化*/
       this.deviceInfo = this.$store.state.devices.deviceinfo;
-      //获取一次deviceData值并给下拉框赋初值
-      let postObj = {};
-      postObj.productKey = this.deviceInfo.productKey;
-      postObj.deviceName = this.deviceInfo.deviceName;
-      this.$store.dispatch('getDeviceDate', postObj).then(() => {
-        //给下拉框默认值,为第一个值,这边由于获取设备数据是异步的,所以要注意先后次序,同步起来
-        for (let key in this.deviceDate.state.reported) {
-          this.attribute = key;
-          break;
-        }
-      }).catch(err => {
-        console.log(err);
-      });
+      //给下拉框默认值,为第一个值,这边由于获取设备数据是异步的,所以要注意先后次序,同步起来
+      for (let key in this.deviceDate.state.reported) {
+        this.attribute = key;
+        break;
+      }
     },
     mounted () {
       //涉及到虚拟DOM的挂载问题都应该在这里面处理,如果在之前处理,DOM都没初始化,会出现挂载错误
       let myChart = this.setCharts();
       //设置获取单台设备数据
       this.interval = setInterval(() => {
-        this.getDeviceDate();
-        //获取完数据后我们需要将数据放到表横纵坐标数组中
+        let postObj = {};
+        postObj.productKey = this.deviceInfo.productKey;
+        postObj.deviceName = this.deviceInfo.deviceName;
+        this.$store.dispatch('getDeviceDate', postObj).then(() => {
+          //获取完数据后我们需要将数据放到表横纵坐标数组中
 //        xData.push(new Date(parseInt(this.deviceDate.timestamp) * 1000).toLocaleString().substr(0, 24));
-        xData.push(new Date().toLocaleTimeString());
-        yData.push(this.deviceDate.state.reported[this.attribute]);
-        myChart.setOption({
-          xAxis: {
-            data: xData
-          },
-          series: [{
-            data: yData
-          }]
+          xData.push(new Date().toLocaleTimeString());
+          yData.push(this.deviceDate.state.reported[this.attribute]);
+          myChart.setOption({
+            xAxis: {
+              data: xData
+            },
+            series: [{
+              data: yData
+            }]
+          });
+        }).catch(err => {
+          console.log(err);
         });
-      }, 1000);
+      }, 2000);
     },
     beforeDestroy() {
       xData = [];
@@ -118,17 +116,6 @@
         yData = [];
       },
       /*与store获取后端的数据接口交互*/
-      //请求单个设备的设备数据
-      getDeviceDate(){
-        let postObj = {};
-        postObj.productKey = this.deviceInfo.productKey;
-        postObj.deviceName = this.deviceInfo.deviceName;
-        this.$store.dispatch('getDeviceDate', postObj).then(() => {
-//          console.log(JSON.stringify(this.deviceDate));
-        }).catch(err => {
-          console.log(err);
-        })
-      }
     }
   }
 </script>

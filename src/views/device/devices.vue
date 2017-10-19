@@ -260,7 +260,9 @@
       },
       gotoHistoryInfo(deviceInfo){
         this.$store.dispatch('setDeviceInfo', deviceInfo).then(() => {
-          this.$router.push('/devices/history');
+          this.$store.dispatch('getDeviceDate', deviceInfo).then(() => {
+            this.$router.push('/devices/history');
+          });
         });
       },
       /**
