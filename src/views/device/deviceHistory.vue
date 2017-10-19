@@ -4,8 +4,8 @@
       <mu-icon-button slot='left' icon='keyboard_arrow_left' style='color: #fff' @click="this.history.back()"/>
     </mu-appbar>
     <div class="bottom">
-      <div>
-        <el-select v-model="attribute" placeholder="选择需要监控的属性">
+      <div class="choose-attr">
+        <el-select v-model="attribute" placeholder="选择需要监控的属性" @change="selectAttributeChange">
           <el-option v-for="(value,key,index) in deviceDate.state.reported" :key="index" :label="key" :value="key">
           </el-option>
         </el-select>
@@ -37,6 +37,19 @@
     created() {
       /*相关变量初始化*/
       this.deviceInfo = this.$store.state.devices.deviceinfo;
+      //获取一次deviceData值并给下拉框赋初值
+      let postObj = {};
+      postObj.productKey = this.deviceInfo.productKey;
+      postObj.deviceName = this.deviceInfo.deviceName;
+      this.$store.dispatch('getDeviceDate', postObj).then(() => {
+        //给下拉框默认值,为第一个值,这边由于获取设备数据是异步的,所以要注意先后次序,同步起来
+        for (let key in this.deviceDate.state.reported) {
+          this.attribute = key;
+          break;
+        }
+      }).catch(err => {
+        console.log(err);
+      });
     },
     mounted () {
       //涉及到虚拟DOM的挂载问题都应该在这里面处理,如果在之前处理,DOM都没初始化,会出现挂载错误
@@ -59,6 +72,8 @@
       }, 1000);
     },
     beforeDestroy() {
+      xData = [];
+      yData = [];
       console.log('清除定时器' + this.interval);
       clearInterval(this.interval);
     },
@@ -97,6 +112,11 @@
         myChart.hideLoading();
         return myChart;
       },
+      /*界面事件触发*/
+      selectAttributeChange(){
+        xData = [];
+        yData = [];
+      },
       /*与store获取后端的数据接口交互*/
       //请求单个设备的设备数据
       getDeviceDate(){
@@ -132,6 +152,9 @@
     }
     .bottom {
       margin-top: 62px;
+      .choose-attr {
+        margin-top: 72px;
+      }
     }
   }
 </style>
