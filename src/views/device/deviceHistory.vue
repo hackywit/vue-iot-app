@@ -12,6 +12,33 @@
       </div>
       <div id="echart" ref="mychart" style="width: 100%;height: 400px;">
       </div>
+      <div class="start-history">
+        <el-row :gutter="0">
+          <el-col :span="6">
+            <div class="grid-content bg-purple">
+              <el-time-select placeholder="开始记录时间">
+              </el-time-select>
+            </div>
+          </el-col>
+          <el-col :span="6">
+            <div class="grid-content bg-purple">
+              <el-time-select placeholder="结束记录时间">
+              </el-time-select>
+            </div>
+          </el-col>
+          <el-col :span="6">
+            <div class="grid-content bg-purple"> 时间间隔:
+              <el-input-number></el-input-number>
+              秒
+            </div>
+          </el-col>
+          <el-col :span="6">
+            <div class="grid-content bg-purple">
+              <el-button type="primary">开始记录</el-button>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
     </div>
   </div>
 </template>
@@ -164,9 +191,38 @@
       padding-top: 62px;
     }
     .bottom {
-      margin-top: 62px;
+      margin: 62px;
       .choose-attr {
         margin-top: 72px;
+      }
+      .start-history{
+        margin-top: 20px;
+        .el-row {
+          margin-bottom: 20px;
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+        .el-col {
+          border-radius: 4px;
+        }
+        .bg-purple-dark {
+          background: #ffffff;
+        }
+        .bg-purple {
+          background: #ffffff;
+        }
+        .bg-purple-light {
+          background: #ffffff;
+        }
+        .grid-content {
+          border-radius: 4px;
+          min-height: 36px;
+        }
+        .row-bg {
+          padding: 10px 0;
+          background-color: #f9fafc;
+        }
       }
     }
   }
