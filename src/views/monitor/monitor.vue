@@ -161,7 +161,7 @@
       /*和通过store和后台的交互*/
       //界面跳转
       gotoAddmonitor(){
-        this.$store.dispatch('getAllData').then(()=>{
+        this.$store.dispatch('getDevices').then(()=>{
             this.$router.push('/monitor/addmonitor');
         });
       }

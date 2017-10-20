@@ -7,20 +7,25 @@
       </router-link>
     </mu-appbar>
     <div class="page-part">
-      <el-select placeholder="请选择产品">
-        <el-option>
+      <el-select v-model="groupIndex" placeholder="请选择设备组">
+        <el-option v-for="group,groupIndex in deviceLists" :key="group.deviceGroupId" :label="group.deviceGroupName"
+                   :value="groupIndex">
         </el-option>
       </el-select>
       <br/>
-      <el-select placeholder="请选择设备">
-        <el-option>
+      <el-select v-model="deviceIndex" placeholder="请选择设备" @change="getAttributes">
+        <el-option v-for="device,deviceIndex in deviceLists[groupIndex].deviceInformation" :key="device.deviceId"
+                   :label="device.deviceAlias"
+                   :value="deviceIndex">
         </el-option>
       </el-select>
       <br/>
-      <el-select placeholder="请选择监控字段">
-        <el-option>
+      <el-select v-model="attribute" placeholder="请选择监控字段">
+        <el-option v-for="(value,key) in attributes" :label="key" :value="key">
         </el-option>
       </el-select>
+      <br/>
+      <el-button type="primary" @click="addMonitorPoint">添加监控点</el-button>
     </div>
   </div>
 </template>
@@ -28,18 +33,38 @@
 <script>
   export default {
     data () {
-      return {}
+      return {
+        /*v-model相关*/
+        groupIndex: 0,
+        deviceIndex: '',
+        attribute: '',
+        /*自定义变量*/
+        attributes: {},
+      }
     },
-    created() {
-
+    computed: {
+      deviceLists(){
+        return this.$store.state.devices.deviceLists;
+      },
     },
     methods: {
-      addDevice() {
-        this.$store.dispatch('addDevice', this.deviceinfo).then(() => {
-          console.log('添加设备成功！');
-          this.$router.push({path: '/devices'});
-        }).catch(err => {
-          console.log('添加设备失败!');
+      /*界面间的数据传递*/
+      addMonitorPoint() {
+        let obj = {};
+        obj.productKey = this.deviceLists[this.groupIndex].deviceInformation[this.deviceIndex].productKey;
+        obj.deviceName = this.deviceLists[this.groupIndex].deviceInformation[this.deviceIndex].deviceName;
+        obj.attribute = this.attribute;
+        this.$store.commit('SET_MONITORDATA', obj);
+        this.$router.go(-1);
+      },
+      /*通过store和后台数据的交互*/
+      getAttributes(){
+        let postObj = {};
+        postObj.productKey = this.deviceLists[this.groupIndex].deviceInformation[this.deviceIndex].productKey;
+        postObj.deviceName = this.deviceLists[this.groupIndex].deviceInformation[this.deviceIndex].deviceName;
+        this.$store.dispatch('getDeviceDate', postObj).then(() => {
+          this.attributes = this.$store.state.devices.deviceDate.state.reported;
+          console.log(JSON.stringify(this.attributes));
         });
       }
     }

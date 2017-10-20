@@ -7,7 +7,7 @@ const monitors = {
     monitorData: [
       {
         deviceName: '',
-        productKey:'',
+        productKey: '',
         attributes: {}
       }
     ],
@@ -36,11 +36,33 @@ const monitors = {
     monitorInfo: {},
   },
   mutations: {
-    SET_MONITORINFO: (state, infor) => {
-      state.monitorInfo = infor;
+    SET_MONITORINFO: (state, data) => {
+      state.monitorInfo = data;
     },
     SET_ALLMONITORDATA: (state, data) => {
       state.allMonitorData = data;
+    },
+    /*界面间的变量通信*/
+    SET_MONITORDATA: (state, data) => {
+      console.log(JSON.stringify(state.monitorData));
+      let i = 0;
+      let flag = 0;
+      state.monitorData.forEach((value) => {
+        if (value.deviceName === data.deviceName && value.productKey === data.productKey) {
+          flag = 1;
+          value.attributes[data.attribute] = '';
+        }
+        i++;
+        console.log(state.monitorData.length);
+        if (i === state.monitorData.length && flag === 0) {
+          let obj = {};
+          obj.deviceName = data.deviceName;
+          obj.productKey = data.productKey;
+          obj.attributes = {};
+          obj.attributes[data.attribute] = '';
+          state.monitorData.push(obj);
+        }
+      })
     }
   },
 
