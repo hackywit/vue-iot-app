@@ -64,7 +64,7 @@
         postObj.deviceName = this.deviceLists[this.groupIndex].deviceInformation[this.deviceIndex].deviceName;
         this.$store.dispatch('getDeviceDate', postObj).then(() => {
           this.attributes = this.$store.state.devices.deviceDate.state.reported;
-          console.log(JSON.stringify(this.attributes));
+//          console.log(JSON.stringify(this.attributes));
         });
       }
     }
