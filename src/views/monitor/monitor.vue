@@ -1,7 +1,7 @@
 <template>
   <div class="monitor">
     <mu-appbar title="监控" class='header'>
-      <mu-icon-button icon="add" slot="right" to='/monitor/addmonitor'/>
+      <mu-icon-button icon="add" slot="right" @click="gotoAddmonitor"/>
     </mu-appbar>
     <div class="monitor-data">
       <mu-flexbox class='flex-box'>
@@ -67,8 +67,6 @@
      */
     created() {
       this.$store.state.selected = 'monitor';
-    },
-    beforeMount(){
       this.$store.dispatch('getAllData').then(() => {
         this.flag = true;
         this.interval = setInterval(() => {
@@ -159,6 +157,13 @@
         postObj.index = index;
         this.$store.commit('SET_MONITORINFO', postObj);
         this.$router.push('/monitor/infor');
+      },
+      /*和通过store和后台的交互*/
+      //界面跳转
+      gotoAddmonitor(){
+        this.$store.dispatch('getAllData').then(()=>{
+            this.$router.push('/monitor/addmonitor');
+        });
       }
     },
   }
