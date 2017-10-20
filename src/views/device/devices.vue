@@ -161,6 +161,7 @@
       /**
        * 相关变量初始化
        */
+      this.$store.state.selected = 'devices';
       this.isShow = this.$store.state.user.userinfo.userType === 'producter';
       this.getDeviceAndStatus();
     },

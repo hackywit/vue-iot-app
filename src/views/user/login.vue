@@ -80,7 +80,7 @@
         postObj.userName = this.userName;
         postObj.password = this.password;
         this.$store.dispatch('login', postObj).then(() => {
-          this.$router.push({path: '/monitor'});
+          this.$router.push({path: '/devices'});
         }).catch(err => {
           this.alertDialog = true;
           this.alertText = this.$store.state.user.error.errorMessage;
