@@ -1,24 +1,30 @@
-import { getAllData,deviceUpdateData } from '@/api/monitor';
+import {getAllData, deviceUpdateData} from '@/api/monitor';
 
 
 const monitors = {
-	state: {
-	  /**
-	   * http请求获取到的变量
-	   */
-		monitorData:  [
+  state: {
+    /*界面交互需要的变量*/
+    monitorData: [
+      {
+        deviceName: '',
+        productKey:'',
+        attributes: {}
+      }
+    ],
+    /**
+     * http请求获取到的变量
+     */
+    allMonitorData: [
       {
         deviceAlias: "",
         deviceName: "",
         productKey: "",
         productName: "",
         state: {
-          reported: {
-          }
+          reported: {}
         },
         metadata: {
-          reported: {
-          }
+          reported: {}
         },
         timestamp: 0,
         version: 0
@@ -29,29 +35,29 @@ const monitors = {
      */
     monitorInfo: {},
   },
-	mutations: {
-		SET_MONITORINFO: (state, infor) => {
-			state.monitorInfo = infor;
-		},
-		SET_MONITORDATA: (state, data) => {
-			state.monitorData = data;
-		}
-	},
+  mutations: {
+    SET_MONITORINFO: (state, infor) => {
+      state.monitorInfo = infor;
+    },
+    SET_ALLMONITORDATA: (state, data) => {
+      state.allMonitorData = data;
+    }
+  },
 
-	actions: {
-		getAllData({ commit }) {
-			return new Promise((resolve, reject) => {
-				getAllData().then(response => {
-					const data = response.data.deviceList;
-					commit('SET_MONITORDATA', data);
-					resolve();
-				}).catch(error => {
+  actions: {
+    getAllData({commit}) {
+      return new Promise((resolve, reject) => {
+        getAllData().then(response => {
+          const data = response.data.deviceList;
+          commit('SET_ALLMONITORDATA', data);
+          resolve();
+        }).catch(error => {
           console.log(error);
-					reject(error);
-				})
-			})
-		},
-    deviceUpdateData({ commit }, data){
+          reject(error);
+        })
+      })
+    },
+    deviceUpdateData({commit}, data){
       console.log(data);
       return new Promise((resolve, reject) => {
         deviceUpdateData(data).then(response => {
@@ -61,7 +67,7 @@ const monitors = {
         })
       })
     }
-	}
+  }
 };
 
 export default monitors;

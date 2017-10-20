@@ -11,7 +11,7 @@
         <mu-flexbox-item class='flex-item'>操作</mu-flexbox-item>
       </mu-flexbox>
       <div id='sortable' v-show="flag">
-        <div v-for='(device,index) in monitorData' :key='index'>
+        <div v-for='(device,index) in allMonitorData' :key='index'>
           <mu-flexbox class='flex-box'>
             <span class="monitor-dev">产品: {{ device.productName }}</span>&nbsp;---&nbsp;
             <span class="monitor-dev">设备: {{ device.deviceAlias }}</span>
@@ -25,7 +25,7 @@
             </mu-flexbox-item>
             <mu-flexbox-item class='flex-item-time' v-for='(value1, key1) in device.metadata.reported'
                              v-if='key1 === key'>
-              {{value1.timestamp | time}}
+              {{value1.timestamp | timeFilter}}
             </mu-flexbox-item>
             <mu-flexbox-item class='flex-item-monitor'>
               <mu-icon-menu icon="menu" tooltip="操作" :anchorOrigin="targetOrigin" :targetOrigin="targetOrigin">
@@ -82,17 +82,68 @@
     },
     computed: {
       //这边界面的数据是要和store中的数据进行关联的
-      monitorData() {
+      allMonitorData() {
+        return this.monitorDataFilter(this.$store.state.monitors.allMonitorData);
+      },
+      monitorData(){
         return this.$store.state.monitors.monitorData;
-      }
+      },
     },
     filters: {
       //过滤函数，对每个时间戳进行处理
-      time: function (timestamp) {
+      timeFilter: function (timestamp) {
         return new Date(parseInt(timestamp) * 1000).toLocaleString().substr(0, 24)
-      }
+      },
     },
     methods: {
+      /*过滤函数*/
+      //这边也需要一个过滤函数完成对用户添加监控的数据监控
+      monitorDataFilter(allMonitorData) {
+        let devicesMonitorData = [];
+        let i = 0;
+        //先从store中循环找到需要监控的数据
+        this.monitorData.forEach((attributeData) => {
+          allMonitorData.forEach((deviceMonitorData) => {
+            if (attributeData.productKey === deviceMonitorData.productKey && attributeData.deviceName === deviceMonitorData.deviceName) {
+              let deviceObj = {};
+              deviceObj.productKey = attributeData.productKey;
+              deviceObj.deviceName = attributeData.deviceName;
+              deviceObj.version = deviceMonitorData.version;
+              deviceObj.deviceAlias = deviceMonitorData.deviceAlias;
+              deviceObj.productName = deviceMonitorData.productName;
+              devicesMonitorData[i] = deviceObj;
+              //TODO:这边有个attribute为空的情况需要处理一下
+              if (attributeData.attributes === []){
+                devicesMonitorData[i].state = {};
+                devicesMonitorData[i].state.reported = {};
+                devicesMonitorData[i].metadata = {};
+                devicesMonitorData[i].metadata.reported = {};
+              } else {
+                let attributeObj = {};//必须放在外面
+                let metadataObj = {};//必须放在外面
+                for (let attributeKey in attributeData.attributes) {
+                  for (let reportedKey in deviceMonitorData.state.reported) {
+                    if (attributeKey === reportedKey) {
+                      attributeObj[reportedKey] = deviceMonitorData.state.reported[reportedKey];
+                      devicesMonitorData[i].state = {};
+                      devicesMonitorData[i].state.reported = attributeObj;
+                    }
+                  }
+                  for (let reportedKey in deviceMonitorData.metadata.reported) {
+                    if (attributeKey === reportedKey) {
+                      metadataObj[reportedKey] = deviceMonitorData.metadata.reported[reportedKey];
+                      devicesMonitorData[i].metadata = {};
+                      devicesMonitorData[i].metadata.reported = metadataObj;
+                    }
+                  }
+                }
+              }
+              i++;
+            }
+          })
+        });
+        return devicesMonitorData;
+      },
       /**
        * 界面间的数据传递
        */

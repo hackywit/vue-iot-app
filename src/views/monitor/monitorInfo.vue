@@ -59,7 +59,7 @@
         postObj.updataMessage = obj;
         this.$store.dispatch('deviceUpdateData', JSON.stringify(postObj)).then(() => {
           //反控成功的话需要将version加1,更改版本号
-          this.$store.state.monitors.monitorData[this.monitorInfo.index].version += 1;
+          this.$store.state.monitors.allMonitorData[this.monitorInfo.index].version += 1;
           this.$router.push('/monitor');
         })
       }
