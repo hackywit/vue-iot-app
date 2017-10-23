@@ -1,5 +1,5 @@
 import {
-  addDevice, getDevices, shareDevice, getDeviceDate, shareDeviceGroup,
+  registerDevice, addDevice, getDevices, shareDevice, getDeviceDate, shareDeviceGroup,
   addDeviceGroup, getDeviceGroup, updateDeviceGroup,
   getProducts, addProduct, updateProduct, deleteProduct,
   getDeviceStatus, getALLDeviceStatus, deleteDevice, cancelDeviceShare, delDeviceGroup
@@ -141,6 +141,16 @@ const devices = {
         deleteDevice(data).then(response => {
           resolve();
         }).catch(error => {
+          reject(error);
+        })
+      })
+    },
+    registerDevice({commit}, data) {
+      return new Promise((resolve, reject) => {
+        registerDevice(JSON.stringify(data)).then(response => {
+          resolve();
+        }).catch(error => {
+          console.log(error);
           reject(error);
         })
       })

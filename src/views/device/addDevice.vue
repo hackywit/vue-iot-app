@@ -9,7 +9,7 @@
       <mu-text-field label="设备序列号" hintText="请输入设备序列号" v-model="deviceInfo.deviceName"></mu-text-field>
       <br/>
     </div>
-    <mu-raised-button label="添加设备" class="demo-raised-button" primary @click='addDevice'/>
+    <mu-raised-button label="添加设备" class="demo-raised-button" primary @click='registerDevice'/>
   </div>
 </template>
 
@@ -42,7 +42,7 @@
        * 与store的数据交互
        */
        /*本界面的数据交互*/
-      addDevice() {
+      registerDevice() {
         let postObj = {
           productKey: this.productInfo.productKey,
           deviceLists: [
@@ -52,11 +52,10 @@
             }
           ]
         };
-        this.$store.dispatch('addDevice', postObj).then(() => {
+        this.$store.dispatch('registerDevice', postObj).then(() => {
           this.$router.go(-1);
           this.$store.dispatch('getProducts');
-        }).catch(err => {
-        });
+        })
       }
     }
   }

@@ -36,9 +36,6 @@ for(let i=0; i< count; i++) {
 }
 
 export default {
-	addDevice: () => {
-		return 'success';
-	},
 	shareDevice: () => {
 		return 'success';
 	},

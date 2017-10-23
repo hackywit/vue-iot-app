@@ -3,12 +3,20 @@ import axios from '@/utils/http'
 
 /* 获取用户所有设备列表 */
 //注册设备
-export function addDevice(data) {
+export function registerDevice(data) {
 	return axios({
 		url: '/v1/register_devices',
 		method: 'post',
 		data
 	})
+}
+
+export function addDevice(data) {
+  return axios({
+    url: '/v1/add_device',
+    method: 'post',
+    data
+  })
 }
 
 //获取所有设备信息

@@ -11,7 +11,6 @@ import friends from '@/views/friend/friends'
 import addDevice from '@/views/device/addDevice'
 import deviceInfo from '@/views/device/deviceInfo'
 import productList from '@/views/device/productList'
-import productInfo from '@/views/device/productInfo'
 import deviceHistory from '@/views/device/deviceHistory'
 
 import addMonitor from '@/views/monitor/addMonitor'
@@ -128,11 +127,6 @@ export default new Router({
       path: '/devices/product/list',
       name: 'productList',
       component: productList
-    },
-    {
-      path: '/devices/product/info',
-      name: 'productInfo',
-      component: productInfo
     }
   ]
 })

@@ -7,6 +7,7 @@
                 :targetOrigin="targetOrigin" @close="handleClose">
       <mu-menu>
         <mu-menu-item title='添加设备组' @click='openAddGroupDialog'/>
+        <mu-menu-item title='添加设备' @click='openAddDeviceDialog'/>
       </mu-menu>
     </mu-popover>
     <mu-list vlaue='selected'>
@@ -73,6 +74,19 @@
       <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
       <mu-flat-button slot='actions' @click='addDeviceGroup' primary label='添加'/>
     </mu-dialog>
+    <mu-dialog :open='addDeviceDialog' title='添加新设备' @close='closeDialog'>
+      <mu-text-field hintText='请输入productKey' v-model='addDeviceInfo.productKey'></mu-text-field>
+      <br/>
+      <mu-text-field hintText='请输入设备序列号' v-model='addDeviceInfo.deviceName'></mu-text-field>
+      <br/>
+      <mu-select-field v-model="addDeviceInfo.deviceGroupId" label="请选择设备组">
+        <mu-menu-item v-for="item in deviceLists" :key="item.deviceGroupId" :title="item.deviceGroupName"
+                      :value="item.deviceGroupId">
+        </mu-menu-item>
+      </mu-select-field>
+      <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
+      <mu-flat-button slot='actions' @click='addDevice' primary label='添加'/>
+    </mu-dialog>
     <mu-dialog :open='delGroupDialog' title='删除设备分组' @close='closeDialog'>
       是否删除设备组：{{ deviceGroup.deviceGroupName }}
       <mu-flat-button slot='actions' @click='closeDialog' primary label='取消'/>
@@ -110,6 +124,7 @@
         delGroupDialog: false,
         shareDeviceGroupDialog: false,
         addGroupDialog: false,
+        addDeviceDialog: false,
         cancelDeviceShareDialog: false,
         shareDeviceDialog: false,
         //界面事件窗口相关变量
@@ -155,6 +170,11 @@
           deviceName: '',
           deviceId: ''
         },
+        addDeviceInfo: {
+          productKey: 'dAC2AX7fCo1',
+          deviceName: 'device06',
+          deviceGroupId: '',
+        }
       }
     },
     created () {
@@ -205,6 +225,10 @@
         this.newDeviceGroupName = '';
         this.addGroupDialog = true;
       },
+      openAddDeviceDialog(){
+        this.openDialog = false;
+        this.addDeviceDialog = true;
+      },
       openDeleteGroupDialog(deviceGroupIndex){
         this.deviceGroup.deviceGroupId = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceGroupId;
         this.deviceGroup.deviceGroupName = this.$store.state.devices.deviceLists[deviceGroupIndex].deviceGroupName;
@@ -235,6 +259,7 @@
         this.delGroupDialog = false;
         this.shareDeviceGroupDialog = false;
         this.shareDeviceDialog = false;
+        this.addDeviceDialog = false;
       },
       //界面事件窗口布局函数
       toggle () {
@@ -337,6 +362,25 @@
             this.showToast(err.message);
             console.log(err);
           });
+        }
+      },
+      addDevice(){
+        if (this.addDeviceInfo.productKey && this.addDeviceInfo.deviceName && this.addDeviceInfo.deviceGroupId) {
+          let postObj = {};
+          postObj.productKey = this.addDeviceInfo.productKey;
+          postObj.deviceName = this.addDeviceInfo.deviceName;
+          postObj.deviceGroupId = this.addDeviceInfo.deviceGroupId;
+          console.log(JSON.stringify(postObj));
+          this.$store.dispatch('addDevice', postObj).then(() => {
+            this.addDeviceDialog = false;
+            this.showToast('添加设备成功');
+            this.getDeviceAndStatus();
+          }).catch(err => {
+            this.showToast(err.message);
+            console.log(err);
+          });
+        } else {
+          this.showToast('输入不能为空');
         }
       },
       delDeviceGroup(){
