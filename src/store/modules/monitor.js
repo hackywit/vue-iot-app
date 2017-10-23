@@ -80,7 +80,8 @@ const monitors = {
       //这边需要将空的数据元素清空
       let i = 0;
       state.monitorData.forEach((value) => {
-        if (value.deviceName === '') {
+        //这边要求i!==0是为了确保第一个为空不清除,不然会出错
+        if (value.deviceName === '' && i !== 0) {
           state.monitorData.splice(i,1);
         }
         i++;
