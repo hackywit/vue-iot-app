@@ -171,8 +171,8 @@
           deviceId: ''
         },
         addDeviceInfo: {
-          productKey: 'dAC2AX7fCo1',
-          deviceName: 'device06',
+          productKey: '',
+          deviceName: '',
           deviceGroupId: '',
         }
       }
