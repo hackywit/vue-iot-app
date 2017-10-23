@@ -30,6 +30,7 @@
             <mu-flexbox-item class='flex-item-monitor'>
               <mu-icon-menu icon="menu" tooltip="操作" :anchorOrigin="targetOrigin" :targetOrigin="targetOrigin">
                 <mu-menu-item title="反控" @click='getMonitorInfo(index,key,value)'/>
+                <mu-menu-item title="删除" @click='deleteMonitorPoint(index,key,value)'/>
               </mu-icon-menu>
             </mu-flexbox-item>
           </mu-flexbox>
@@ -44,6 +45,7 @@
 
 <script>
   import base64 from '@/utils/base64'
+  import common from '@/utils/common'
   export default {
     data () {
       return {
@@ -103,6 +105,7 @@
       monitorDataFilter(allMonitorData) {
         let devicesMonitorData = [];
         let i = 0;
+        console.log(JSON.stringify(this.monitorData));
         //先从store中循环找到需要监控的数据
         this.monitorData.forEach((attributeData) => {
           allMonitorData.forEach((deviceMonitorData) => {
@@ -114,8 +117,8 @@
               deviceObj.deviceAlias = deviceMonitorData.deviceAlias;
               deviceObj.productName = deviceMonitorData.productName;
               devicesMonitorData[i] = deviceObj;
-              //TODO:这边有个attribute为空的情况需要处理一下
-              if (attributeData.attributes === []){
+              //这边有个attribute为空的情况需要处理一下
+              if (common.isObjectEmpty(attributeData.attributes)) {
                 devicesMonitorData[i].state = {};
                 devicesMonitorData[i].state.reported = {};
                 devicesMonitorData[i].metadata = {};
@@ -151,22 +154,34 @@
        */
       getMonitorInfo(index, key, value) {
         let postObj = {};
-        postObj.deviceAlias = this.$store.state.monitors.monitorData[index].deviceAlias;
-        postObj.deviceName = this.$store.state.monitors.monitorData[index].deviceName;
-        postObj.productKey = this.$store.state.monitors.monitorData[index].productKey;
-        postObj.productName = this.$store.state.monitors.monitorData[index].productName;
-        postObj.version = this.$store.state.monitors.monitorData[index].version;
+        postObj.deviceAlias = this.allMonitorData[index].deviceAlias;
+        postObj.deviceName = this.allMonitorData[index].deviceName;
+        postObj.productKey = this.allMonitorData[index].productKey;
+        postObj.productName = this.allMonitorData[index].productName;
+        postObj.version = this.allMonitorData[index].version;
         postObj.monitorName = key;
         postObj.monitorData = value;
         postObj.index = index;
         this.$store.commit('SET_MONITORINFO', postObj);
         this.$router.push('/monitor/infor');
       },
+      deleteMonitorPoint(index, key, vulue){
+        let postObj = {};
+        postObj.deviceAlias = this.allMonitorData[index].deviceAlias;
+        postObj.deviceName = this.allMonitorData[index].deviceName;
+        postObj.productKey = this.allMonitorData[index].productKey;
+        postObj.productName = this.allMonitorData[index].productName;
+        postObj.version = this.allMonitorData[index].version;
+        postObj.monitorName = key;
+        postObj.monitorData = vulue;
+        postObj.index = index;
+        this.$store.commit('DELETE_MONITORDATA', postObj);
+      },
       /*和通过store和后台的交互*/
       //界面跳转
       gotoAddmonitor(){
-        this.$store.dispatch('getDevices').then(()=>{
-            this.$router.push('/monitor/addmonitor');
+        this.$store.dispatch('getDevices').then(() => {
+          this.$router.push('/monitor/addmonitor');
         });
       }
     },
