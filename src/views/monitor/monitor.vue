@@ -18,7 +18,7 @@
           </mu-flexbox>
           <mu-flexbox class='flex-box' v-for='(value, key) in device.state.reported' :key='key'>
             <mu-flexbox-item class='flex-item-monitor'>
-              <span class="monitor-key">{{key}}</span>
+              <span class="monitor-key">{{key | attributeFilter}}</span>
             </mu-flexbox-item>
             <mu-flexbox-item class='flex-item-monitor'>
               {{value}}
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+  import base64 from '@/utils/base64'
   export default {
     data () {
       return {
@@ -92,6 +93,9 @@
       timeFilter: function (timestamp) {
         return new Date(parseInt(timestamp) * 1000).toLocaleString().substr(0, 24)
       },
+      attributeFilter: function (attributeKey) {
+        return base64.decode(attributeKey);
+      }
     },
     methods: {
       /*过滤函数*/
