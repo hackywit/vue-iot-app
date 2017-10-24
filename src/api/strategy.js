@@ -3,9 +3,17 @@
  */
 import axios from '@/utils/http'
 
-export function getAllStrategies() {
+export function getDefaultStrategy() {
   return axios({
-    url: '/v1/getall_strategy',
+    url: '/v1/getStrategy',
     method: 'get'
+  })
+}
+
+export function changeStrategy(data) {
+  return axios({
+    url: '/v1/change_strategy',
+    method: 'post',
+    data
   })
 }

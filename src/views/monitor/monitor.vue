@@ -78,7 +78,6 @@
       });
     },
     beforeDestroy() {
-      console.log('清除定时器' + this.interval);
       clearInterval(this.interval);
     },
     computed: {
@@ -87,7 +86,7 @@
         return this.monitorDataFilter(this.$store.state.monitors.allMonitorData);
       },
       monitorData(){
-        return this.$store.state.monitors.monitorData;
+        return this.$store.state.strategy.strategy;
       },
     },
     filters: {
@@ -105,7 +104,7 @@
       monitorDataFilter(allMonitorData) {
         let devicesMonitorData = [];
         let i = 0;
-        console.log(JSON.stringify(this.monitorData));
+//        console.log(JSON.stringify(this.monitorData));
         //先从store中循环找到需要监控的数据
         this.monitorData.forEach((attributeData) => {
           allMonitorData.forEach((deviceMonitorData) => {
@@ -166,16 +165,21 @@
         this.$router.push('/monitor/infor');
       },
       deleteMonitorPoint(index, key, vulue){
+        let obj = {};
+        obj.deviceAlias = this.allMonitorData[index].deviceAlias;
+        obj.deviceName = this.allMonitorData[index].deviceName;
+        obj.productKey = this.allMonitorData[index].productKey;
+        obj.productName = this.allMonitorData[index].productName;
+        obj.version = this.allMonitorData[index].version;
+        obj.monitorName = key;
+        obj.monitorData = vulue;
+        obj.index = index;
+        this.$store.commit('DELETE_MONITORDATA', obj);
+        //TODO:这边需要同步执行
         let postObj = {};
-        postObj.deviceAlias = this.allMonitorData[index].deviceAlias;
-        postObj.deviceName = this.allMonitorData[index].deviceName;
-        postObj.productKey = this.allMonitorData[index].productKey;
-        postObj.productName = this.allMonitorData[index].productName;
-        postObj.version = this.allMonitorData[index].version;
-        postObj.monitorName = key;
-        postObj.monitorData = vulue;
-        postObj.index = index;
-        this.$store.commit('DELETE_MONITORDATA', postObj);
+        postObj.strategyId = this.$store.state.strategy.strategyId;
+        postObj.strategy = this.$store.state.strategy.strategy;
+        this.$store.dispatch('changeStrategy', postObj);
       },
       /*和通过store和后台的交互*/
       //界面跳转

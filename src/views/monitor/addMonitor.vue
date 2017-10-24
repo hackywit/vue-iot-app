@@ -55,6 +55,11 @@
         obj.deviceName = this.deviceLists[this.groupIndex].deviceInformation[this.deviceIndex].deviceName;
         obj.attribute = this.attribute;
         this.$store.commit('SET_MONITORDATA', obj);
+        //TODO:这边需要同步执行
+        let postObj = {};
+        postObj.strategyId = this.$store.state.strategy.strategyId;
+        postObj.strategy = this.$store.state.strategy.strategy;
+        this.$store.dispatch('changeStrategy', postObj);
         this.$router.go(-1);
       },
       /*通过store和后台数据的交互*/
