@@ -21,7 +21,7 @@
       </el-select>
       <br/>
       <el-select v-model="attribute" placeholder="请选择监控字段">
-        <el-option v-for="(value,key) in attributes" :label="key" :value="key">
+        <el-option v-for="(value,key) in attributes" :label="key | attributeFilter" :value="key">
         </el-option>
       </el-select>
       <br/>
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+  import base64 from '@/utils/base64';
   export default {
     data () {
       return {
@@ -40,6 +41,11 @@
         attribute: '',
         /*自定义变量*/
         attributes: {},
+      }
+    },
+    filters: {
+      attributeFilter: function (attributeKey) {
+        return base64.decode(attributeKey);
       }
     },
     computed: {
