@@ -125,16 +125,16 @@
               } else {
                 let attributeObj = {};//必须放在外面
                 let metadataObj = {};//必须放在外面
-                for (let attributeKey in attributeData.attributes) {
+                for (let attributeWord in attributeData.attributes) {
                   for (let reportedKey in deviceMonitorData.state.reported) {
-                    if (attributeKey === reportedKey) {
+                    if (attributeWord === common.getAttributeWord(reportedKey)) {
                       attributeObj[reportedKey] = deviceMonitorData.state.reported[reportedKey];
                       devicesMonitorData[i].state = {};
                       devicesMonitorData[i].state.reported = attributeObj;
                     }
                   }
                   for (let reportedKey in deviceMonitorData.metadata.reported) {
-                    if (attributeKey === reportedKey) {
+                    if (attributeWord === common.getAttributeWord(reportedKey)) {
                       metadataObj[reportedKey] = deviceMonitorData.metadata.reported[reportedKey];
                       devicesMonitorData[i].metadata = {};
                       devicesMonitorData[i].metadata.reported = metadataObj;
@@ -171,7 +171,7 @@
         obj.productKey = this.allMonitorData[index].productKey;
         obj.productName = this.allMonitorData[index].productName;
         obj.version = this.allMonitorData[index].version;
-        obj.monitorName = key;
+        obj.monitorName = common.getAttributeWord(key);
         obj.monitorData = vulue;
         obj.index = index;
         this.$store.commit('DELETE_MONITORDATA', obj);

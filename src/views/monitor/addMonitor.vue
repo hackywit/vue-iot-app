@@ -21,7 +21,7 @@
       </el-select>
       <br/>
       <el-select v-model="attribute" placeholder="请选择监控字段">
-        <el-option v-for="(value,key) in attributes" :label="key | attributeFilter" :value="key">
+        <el-option v-for="(value,key) in attributes" :label="key" :value="key">
         </el-option>
       </el-select>
       <br/>
@@ -32,6 +32,7 @@
 
 <script>
   import base64 from '@/utils/base64';
+  import common from '@/utils/common'
   export default {
     data () {
       return {
@@ -43,11 +44,7 @@
         attributes: {},
       }
     },
-    filters: {
-      attributeFilter: function (attributeKey) {
-        return base64.decode(attributeKey);
-      }
-    },
+
     computed: {
       deviceLists(){
         return this.$store.state.devices.deviceLists;
@@ -74,7 +71,12 @@
         postObj.productKey = this.deviceLists[this.groupIndex].deviceInformation[this.deviceIndex].productKey;
         postObj.deviceName = this.deviceLists[this.groupIndex].deviceInformation[this.deviceIndex].deviceName;
         this.$store.dispatch('getDeviceDate', postObj).then(() => {
-          this.attributes = this.$store.state.devices.deviceDate.state.reported;
+          //将所有的attributeKey都处理一下
+          this.attributes = {};
+          for (let key in this.$store.state.devices.deviceDate.state.reported){
+            this.attributes[common.getAttributeWord(key)] = this.$store.state.devices.deviceDate.state.reported[key];
+          }
+          this.attribute = '';
 //          console.log(JSON.stringify(this.attributes));
         });
       }
