@@ -6,7 +6,7 @@
     <div class="bottom">
       <div class="choose-attr">
         <el-select v-model="attribute" placeholder="选择需要监控的属性" @change="selectAttributeChange">
-          <el-option v-for="(value,key) in deviceDate.state.reported" :key="key" :label="key" :value="key">
+          <el-option v-for="(value,key) in deviceDate.state.reported" :key="key" :label="key | attributeFilter" :value="key">
           </el-option>
         </el-select>
       </div>
@@ -16,25 +16,25 @@
         <el-row :gutter="0">
           <el-col :span="6">
             <div class="grid-content bg-purple">
-              <el-time-select placeholder="开始记录时间">
-              </el-time-select>
+              <el-time-picker v-model="startTime" placeholder="开始记录时间">
+              </el-time-picker>
             </div>
           </el-col>
           <el-col :span="6">
             <div class="grid-content bg-purple">
-              <el-time-select placeholder="结束记录时间">
-              </el-time-select>
+              <el-time-picker v-model="stopTime" placeholder="结束记录时间">
+              </el-time-picker>
             </div>
           </el-col>
           <el-col :span="6">
             <div class="grid-content bg-purple"> 时间间隔:
-              <el-input-number></el-input-number>
+              <el-input-number v-model="timeInterval"></el-input-number>
               秒
             </div>
           </el-col>
           <el-col :span="6">
             <div class="grid-content bg-purple">
-              <el-button type="primary">开始记录</el-button>
+              <el-button type="primary" @click="recordHistory">开始记录</el-button>
             </div>
           </el-col>
         </el-row>
@@ -44,6 +44,8 @@
 </template>
 
 <script>
+  import common from '@/utils/common'
+  import base64 from '@/utils/base64'
   import echarts from 'echarts';
   let xData = [];//存放表的时间
   let yData = [];//存放表的数值
@@ -57,9 +59,13 @@
           productKey: '',
           deviceAlias: '',
         },
+        /*v-model相关*/
+        attribute: '',
+        startTime: new Date(),
+        stopTime: new Date(),
+        timeInterval: 1,
         /*设置自定义变量*/
         interval: 0,
-        attribute: ''
       }
     },
     created() {
@@ -84,7 +90,7 @@
 //        xData.push(new Date(parseInt(this.deviceDate.timestamp) * 1000).toLocaleString().substr(0, 24));
           xData.push(new Date().toLocaleTimeString());
           yData.push(this.deviceDate.state.reported[this.attribute]);
-          subtext = this.attribute;
+          subtext = common.getAttributeWord(this.attribute);
           myChart.setOption({
             title: {
               subtext: subtext,
@@ -109,6 +115,11 @@
       yData = [];
       console.log('清除定时器' + this.interval);
       clearInterval(this.interval);
+    },
+    filters: {
+      attributeFilter: function (attributeKey) {
+        return base64.decode(attributeKey);
+      }
     },
     computed: {
       deviceDate() {
@@ -169,6 +180,15 @@
         yData = [];
       },
       /*与store获取后端的数据接口交互*/
+      recordHistory() {
+        let postObj = {};
+        postObj.deviceId = this.deviceInfo.deviceId;
+        postObj.attribute = this.attribute;
+        postObj.startTime = this.startTime;
+        postObj.stopTime = this.stopTime;
+        postObj.interval = 1;
+        this.$store.dispatch('recordHistory',postObj);
+      },
     }
   }
 </script>

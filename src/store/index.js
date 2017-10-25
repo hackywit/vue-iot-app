@@ -6,6 +6,7 @@ import monitors from './modules/monitor';
 import devices from './modules/device';
 import getters from './getters';
 import strategy from './modules/strategy';
+import history from './modules/history';
 
 Vue.use(Vuex);
 
@@ -16,7 +17,8 @@ const store = new Vuex.Store({
     friend,
     monitors,
     devices,
-    strategy
+    strategy,
+    history,
   },
   getters
 });
