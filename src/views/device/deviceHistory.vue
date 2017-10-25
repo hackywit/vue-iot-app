@@ -28,7 +28,7 @@
           </el-col>
           <el-col :span="6">
             <div class="grid-content bg-purple"> 时间间隔:
-              <el-input-number v-model="timeInterval"></el-input-number>
+              <el-input-number v-model="timeInterval" :min="1" :step="1"></el-input-number>
               秒
             </div>
           </el-col>
