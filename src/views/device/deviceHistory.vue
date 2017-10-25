@@ -63,7 +63,7 @@
         attribute: '',
         startTime: new Date(),
         stopTime: new Date(),
-        timeInterval: 1,
+        timeInterval: 5,
         /*设置自定义变量*/
         interval: 0,
       }
@@ -184,9 +184,9 @@
         let postObj = {};
         postObj.deviceId = this.deviceInfo.deviceId;
         postObj.attribute = this.attribute;
-        postObj.startTime = this.startTime;
-        postObj.stopTime = this.stopTime;
-        postObj.interval = 1;
+        postObj.startTime = Date.parse(new Date(this.startTime))/1000;
+        postObj.stopTime = Date.parse(new Date(this.stopTime))/1000;
+        postObj.interval = this.timeInterval;
         this.$store.dispatch('recordHistory',postObj);
       },
     }
