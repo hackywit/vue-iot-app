@@ -125,9 +125,12 @@
               } else {
                 let attributeObj = {};//必须放在外面
                 let metadataObj = {};//必须放在外面
+                let attributeFlag = 0;
+                let metadataFlag = 0;//标志位用来判断是否匹配到参数
                 for (let attributeWord in attributeData.attributes) {
                   for (let reportedKey in deviceMonitorData.state.reported) {
                     if (attributeWord === common.getAttributeWord(reportedKey)) {
+                      attributeFlag = 1;
                       attributeObj[reportedKey] = deviceMonitorData.state.reported[reportedKey];
                       devicesMonitorData[i].state = {};
                       devicesMonitorData[i].state.reported = attributeObj;
@@ -135,10 +138,18 @@
                   }
                   for (let reportedKey in deviceMonitorData.metadata.reported) {
                     if (attributeWord === common.getAttributeWord(reportedKey)) {
+                      metadataFlag = 1;
                       metadataObj[reportedKey] = deviceMonitorData.metadata.reported[reportedKey];
                       devicesMonitorData[i].metadata = {};
                       devicesMonitorData[i].metadata.reported = metadataObj;
                     }
+                  }
+                  //如果没有匹配到参数
+                  if (attributeFlag === 0 || metadataFlag === 0){
+                    devicesMonitorData[i].state = {};
+                    devicesMonitorData[i].state.reported = {};
+                    devicesMonitorData[i].metadata = {};
+                    devicesMonitorData[i].metadata.reported = {};
                   }
                 }
               }
