@@ -24,10 +24,6 @@
       <br/>
       <mu-text-field label="公司名" hintText="请输入公司名称" v-model="userinfo.company"></mu-text-field>
       <br/>
-      <mu-select-field v-model='userinfo.userType' label='请选择用户类型'>
-        <mu-menu-item value='producter' title='生产设备厂商'/>
-        <mu-menu-item value='user' title='用户'/>
-      </mu-select-field>
     </div>
     <mu-raised-button label="提交注册信息" class="demo-raised-button" primary @click="userRegister"/>
     <br/><br/><br/>
@@ -66,7 +62,6 @@
           company: '',
           tel: '',
           email: '',
-          userType: ''
         },
         retypePwd: '',
         /**
@@ -104,7 +99,6 @@
         }
         //先要判断用户名是否已经被注册了
         let postObj = {};
-        postObj.userType = this.userinfo.userType;
         postObj.userName = this.userinfo.userName;
         this.$store.dispatch('isUserExist', postObj).then(() => {
           //当用户名不存在的时候继续,验证手机号是否正确

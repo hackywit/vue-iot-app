@@ -22,9 +22,6 @@
         <mu-list-item title='地址' :afterText='address' to='/user/address'>
           <mu-icon-menu slot="right" icon="keyboard_arrow_right"></mu-icon-menu>
         </mu-list-item>
-        <mu-list-item title='用户类型' :afterText='userinfo.userType === "user" ? "普通用户" : "生产设备厂商"'>
-          <mu-icon-menu slot="right" icon="keyboard_arrow_right"></mu-icon-menu>
-        </mu-list-item>
         <mu-list-item title='修改密码' to='/user/password'>
           <mu-icon-menu slot="right" icon="keyboard_arrow_right"></mu-icon-menu>
         </mu-list-item>

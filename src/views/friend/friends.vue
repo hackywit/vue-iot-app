@@ -32,11 +32,6 @@
     <mu-dialog :open='showAddFriend' title='添加好友'>
       <mu-text-field hintText='请输入好友用户名' v-model='friendName'></mu-text-field>
       <br/>
-      <mu-select-field v-model='userType' label='请选择好友用户类型'>
-        <mu-menu-item value='producter' title='生产设备厂商'/>
-        <mu-menu-item value='user' title='用户'/>
-      </mu-select-field>
-      <br/>
       <mu-flat-button slot='actions' @click='closeAllDialog' primary label='取消'/>
       <mu-flat-button slot='actions' @click='addFriend' primary label='添加'/>
     </mu-dialog>
@@ -103,7 +98,6 @@
         addGroupName: '',
         //添加好友相关变量
         friendName: '',
-        userType: '',
         //移动好友相关变量
         friendGroupName: '',
         /**
@@ -119,7 +113,6 @@
         //保存选中组的选中好友信息
         friendInfo: {
           friendName: '',
-          userType: '',
           groupName: ''
         },
       }
@@ -170,12 +163,10 @@
       },
       openMoveFrinedDialog(friendGroupIndex, friendIndex){
         this.friendInfo.friendName = this.$store.state.friend.friendList[friendGroupIndex].friends[friendIndex].friendName;
-        this.friendInfo.userType = this.$store.state.friend.friendList[friendGroupIndex].friends[friendIndex].userType;
         this.moveFriendDialog = true;
       },
       openDeleteFrinedDialog(friendGroupIndex, friendIndex){
         this.friendInfo.friendName = this.$store.state.friend.friendList[friendGroupIndex].friends[friendIndex].friendName;
-        this.friendInfo.userType = this.$store.state.friend.friendList[friendGroupIndex].friends[friendIndex].userType;
         this.delFriendDialog = true;
       },
       closeAllDialog() {
@@ -226,7 +217,6 @@
       addFriend() {
         let postObj = {};
         postObj.friendName = this.friendName;
-        postObj.userType = this.userType;
         this.$store.dispatch('addFriend', postObj).then(() => {
           this.showAddFriend = false;
           this.showToast('发送好友请求成功');
@@ -239,7 +229,6 @@
       moveFriend(){
         let postObj = {};
         postObj.friendName = this.friendInfo.friendName;
-        postObj.friendType = this.friendInfo.userType;
         postObj.bemoveGroupName = this.friendgroup.friendGroupName;
         this.$store.dispatch('updateFriendGroup', postObj).then(() => {
           this.moveFriendDialog = false;
@@ -253,7 +242,6 @@
       delFriend(){
         let postObj = {};
         postObj.friendName = this.friendInfo.friendName;
-        postObj.friendType = this.friendInfo.userType;
         this.$store.dispatch('deleteFriend', postObj).then(() => {
           this.delFriendDialog = false;
           this.showToast('删除好友成功');

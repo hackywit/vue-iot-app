@@ -12,7 +12,6 @@ const user = {
 			country: '',
 			province: '',
 			company: '',
-			userType: ''
 		},
     //错误消息提示
     error:{
@@ -25,9 +24,6 @@ const user = {
 	mutations: {
 		SET_USERNAME: (state, name) => {
 			state.userinfo.userName = name;
-		},
-		SET_USERTYPE: (state, usertype) => {
-			state.userinfo.userType = usertype;
 		},
 		SET_USERINFO: (state, userinfo) => {
 			state.userinfo = userinfo;
@@ -80,7 +76,6 @@ const user = {
           //
           // Cookies.set('path', '/', {expires: 365});
 					commit('SET_USERNAME', data.userName);
-					commit('SET_USERTYPE', data.userType);
 					resolve();
 				}).catch(error => {
 				  let errorInfor = {};

@@ -6,11 +6,6 @@
     <br/>
     <mu-text-field label="密 码" hintText="请输入密码" type="password" v-model="password"></mu-text-field>
     <br/>
-    <mu-select-field v-model='userType' label='请选择用户类型'>
-      <mu-menu-item value='producter' title='生产设备厂商'/>
-      <mu-menu-item value='user' title='用户'/>
-    </mu-select-field>
-    <br/>
     <mu-raised-button label="登录" primary @click="userlogin"/>
     <div class="link">
       <mu-flat-button to='/register' label="注册账号" class="flat-button" primary/>
@@ -42,7 +37,6 @@
         /**
          * v-model相关的变量
          */
-        userType: '',
         userName: '',
         password: '',
         /**
@@ -76,7 +70,6 @@
           return
         }
         let postObj = {};
-        postObj.userType = this.userType;
         postObj.userName = this.userName;
         postObj.password = this.password;
         this.$store.dispatch('login', postObj).then(() => {

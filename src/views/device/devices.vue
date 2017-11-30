@@ -75,8 +75,6 @@
       <mu-flat-button slot='actions' @click='addDeviceGroup' primary label='添加'/>
     </mu-dialog>
     <mu-dialog :open='addDeviceDialog' title='添加新设备' @close='closeDialog'>
-      <mu-text-field hintText='请输入productKey' v-model='addDeviceInfo.productKey'></mu-text-field>
-      <br/>
       <mu-text-field hintText='请输入设备序列号' v-model='addDeviceInfo.deviceName'></mu-text-field>
       <br/>
       <mu-select-field v-model="addDeviceInfo.deviceGroupId" label="请选择设备组">
@@ -171,7 +169,6 @@
           deviceId: ''
         },
         addDeviceInfo: {
-          productKey: '',
           deviceName: '',
           deviceGroupId: '',
         }
@@ -365,9 +362,8 @@
         }
       },
       addDevice(){
-        if (this.addDeviceInfo.productKey && this.addDeviceInfo.deviceName && this.addDeviceInfo.deviceGroupId) {
+        if (this.addDeviceInfo.deviceName && this.addDeviceInfo.deviceGroupId) {
           let postObj = {};
-          postObj.productKey = this.addDeviceInfo.productKey;
           postObj.deviceName = this.addDeviceInfo.deviceName;
           postObj.deviceGroupId = this.addDeviceInfo.deviceGroupId;
           console.log(JSON.stringify(postObj));

@@ -12,11 +12,10 @@
         <mu-list-item v-for='sub in unreceivedList' :key='sub.friendName' :title='sub.friendName' slot='nested'>
           <mu-icon slot="left" value="person"/>
           <span slot='describe'>
-        				<span slot='left'>用户类型：{{sub.userType}} </span><br/>
         				<span slot='left'>请求添加你为好友</span>
-        			</span>
+          </span>
           <mu-raised-button slot='right' label="接受" class="receive-btn" primary
-                            @click='receiveFriend(sub.friendName, sub.userType)'/>
+                            @click='receiveFriend(sub.friendName)'/>
         </mu-list-item>
       </div>
       <div v-if="activeTab === 'applyFriendTab'">
@@ -72,9 +71,10 @@
       handleTabChange(val) {
         this.activeTab = val;
       },
-      receiveFriend(name, type) {
-        let data = '{ "userName": "' + name + '", "userType": "' + type + ' "}';
-        this.$store.dispatch('receiveFriend', data).then(() => {
+      receiveFriend(name) {
+        let postObj = {};
+        postObj.userName = name;
+        this.$store.dispatch('receiveFriend', JSON.stringify(postObj)).then(() => {
           this.$store.dispatch('getUnreceivedList').then(() => {
             this.showToast('添加好友成功')
           }).catch(err => {
