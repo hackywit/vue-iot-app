@@ -77,6 +77,8 @@
     <mu-dialog :open='addDeviceDialog' title='添加新设备' @close='closeDialog'>
       <mu-text-field hintText='请输入设备序列号' v-model='addDeviceInfo.deviceName'></mu-text-field>
       <br/>
+      <mu-text-field hintText='请输入验证码' v-model='addDeviceInfo.checkCode'></mu-text-field>
+      <br/>
       <mu-select-field v-model="addDeviceInfo.deviceGroupId" label="请选择设备组">
         <mu-menu-item v-for="item in deviceLists" :key="item.deviceGroupId" :title="item.deviceGroupName"
                       :value="item.deviceGroupId">
@@ -171,6 +173,7 @@
         addDeviceInfo: {
           deviceName: '',
           deviceGroupId: '',
+          checkCode: ''
         }
       }
     },
@@ -366,6 +369,7 @@
           let postObj = {};
           postObj.deviceName = this.addDeviceInfo.deviceName;
           postObj.deviceGroupId = this.addDeviceInfo.deviceGroupId;
+          postObj.checkCode = this.addDeviceInfo.checkCode;
           console.log(JSON.stringify(postObj));
           this.$store.dispatch('addDevice', postObj).then(() => {
             this.addDeviceDialog = false;
